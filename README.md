@@ -614,7 +614,7 @@
 * ##### TableDao
 
 ```java
-@Nullable
+    @Nullable
     default TABLE queryFirstTableByPrimaryKey(@NonNull final Object primaryKeyValue) {
         return queryFirstTable(getPrimaryKey() + " =?", new String[]{String.valueOf(primaryKeyValue)});
     }
@@ -709,18 +709,31 @@
                                   @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
         return toTable(queryCursor(columns, where, whereArgs, limit, offset));
     }
-
+    /**
+     * 保存或者更新数据
+     * @param table 更新的实体
+     * @param where 更新的条件sql
+     * @param whereArgs 更新的条件
+     * @return true 保存或者更新成功
+     */
     default boolean saveOrUpdate(@NonNull final TABLE table, @NonNull final String where,
                                  @NonNull final String[] whereArgs) {
         final Map<String, Object> values = toMap(table);
         return saveOrUpdate(values, where, whereArgs);
     }
-
+    /**
+     * 根据主键保存或者更新数据
+     * @param table 更新的实体
+     * @return true 保存或者更新成功
+     */
     default boolean saveOrUpdate(@NonNull final TABLE table) {
         final Map<String, Object> values = toMap(table);
         return saveOrUpdate(values);
     }
 
+    /**
+     * 将cursor转换为实体
+     */
     @Nullable
     default TABLE toTable(@Nullable Cursor cursor) {
         @Nullable final List<TABLE> tableList = toTableList(cursor);
@@ -730,9 +743,14 @@
         return tableList.get(0);
     }
 
+    /**
+     * 将cursor转换为实体列表
+     */
     @Nullable
     List<TABLE> toTableList(@Nullable Cursor cursor);
-
+    /**
+     * 将cursor转换为Map<String, Object>
+     */
     @NonNull
     Map<String, Object> toMap(@NonNull final TABLE table);
 ```
