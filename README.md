@@ -45,27 +45,15 @@
      * @return 分页sql
      */
     @NonNull
-    default String getPage(int pageSize, int pageIndex) {
-        return " LIMIT " + pageSize + " OFFSET " + pageIndex;
-    }
+    default String getPage(int pageSize, int pageIndex);
 
-    /**
-     * 获取Database
-     * @return Database
-     */
-    @NonNull
-    default Database getDatabase() {
-        return DatabaseManger.getDatabase();
-    }
 
     /**
      * 判断数据库是否存在
      * @param tableName 表名
      * @return true 数据库存在
      */
-    default boolean isExist(@NonNull final String tableName) {
-        return getDatabase().tableIsExist(tableName);
-    }
+    default boolean isExist(@NonNull final String tableName);
 
     /**
      * 获取数据表语句
@@ -73,18 +61,14 @@
      * @return 表语句
      */
     @Nullable
-    default String getCreateSqlForMaster(@NonNull final String tableName) {
-        return getDatabase().getCreateSqlForMaster(tableName);
-    }
+    default String getCreateSqlForMaster(@NonNull final String tableName);
 
     /**
      * 执行sql语句
      * @param sql 需要执行的语句
      * @return true 成功
      */
-    default boolean execute(@NonNull String sql) {
-        return getDatabase().execSQL(sql);
-    }
+    default boolean execute(@NonNull String sql);
 
     /**
      * 执行sql语句
@@ -92,18 +76,14 @@
      * @param arguments 条件
      * @return true 成功
      */
-    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments) {
-        return getDatabase().execSQL(sql, arguments);
-    }
+    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments);
 
     /**
      * 更新数据
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default int rawUpdate(@NonNull final String sql) {
-        return getDatabase().rawUpdate(sql, null);
-    }
+    default int rawUpdate(@NonNull final String sql);
 
     /**
      * 更新数据
@@ -111,44 +91,34 @@
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default int rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs) {
-        return getDatabase().rawUpdate(sql, whereArgs);
-    }
+    default int rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs);
 
     /**
      * 删除数据 
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default int rawDelete(@NonNull final String sql) {
-        return getDatabase().rawDelete(sql, null);
-    }
+    default int rawDelete(@NonNull final String sql);
     /**
      * 删除数据
      * @param sql 需要执行的语句
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default int rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs) {
-        return getDatabase().rawDelete(sql, whereArgs);
-    }
+    default int rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs);
     /**
      * 插入数据
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default long rawInsert(@NonNull final String sql) {
-        return getDatabase().rawInsert(sql, null);
-    }
+    default long rawInsert(@NonNull final String sql);
     /**
      * 插入数据
      * @param sql 需要执行的语句
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs) {
-        return getDatabase().rawInsert(sql, whereArgs);
-    }
+    default long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs);
 
     /**
      * 查询数据
@@ -156,9 +126,7 @@
      * @return 返回的结果
      */
     @Nullable
-    default List<Map<String, Object>> rawQuery(@NonNull final String sql) {
-        return getDatabase().rawQuery(sql, null);
-    }
+    default List<Map<String, Object>> rawQuery(@NonNull final String sql);
     /**
      * 查询数据
      * @param sql 需要查询的语句
@@ -166,18 +134,14 @@
      * @return 返回的结果
      */
     @Nullable
-    default List<Map<String, Object>> rawQuery(@NonNull final String sql, @Nullable final Object[] arguments) {
-        return getDatabase().rawQuery(sql, arguments);
-    }
+    default List<Map<String, Object>> rawQuery(@NonNull final String sql, @Nullable final Object[] arguments);
     /**
      * 查询数据
      * @param sql 需要查询的语句
      * @return 返回的结果
      */
     @Nullable
-    default Map<String, Object> rawQueryFirst(@NonNull final String sql) {
-        return getDatabase().rawQueryFirst(sql, null);
-    }
+    default Map<String, Object> rawQueryFirst(@NonNull final String sql);
     /**
      * 查询数据
      * @param sql 需要查询的语句
@@ -185,18 +149,14 @@
      * @return 返回的结果
      */
     @Nullable
-    default Map<String, Object> rawQueryFirst(@NonNull final String sql, @Nullable final Object[] arguments) {
-        return getDatabase().rawQueryFirst(sql, arguments);
-    }
+    default Map<String, Object> rawQueryFirst(@NonNull final String sql, @Nullable final Object[] arguments);
     /**
      * 查询数据
      * @param sql 需要查询的语句
      * @return 返回的结果
      */
     @Nullable
-    default Cursor rawQueryCursor(@NonNull final String sql) {
-        return getDatabase().rawQueryCursor(sql, null);
-    }
+    default Cursor rawQueryCursor(@NonNull final String sql);
     /**
      * 查询数据
      * @param sql 需要查询的语句
@@ -204,9 +164,7 @@
      * @return 返回的结果
      */
     @Nullable
-    default Cursor rawQueryCursor(@NonNull final String sql, @Nullable final Object[] selectionArgs) {
-        return getDatabase().rawQueryCursor(sql, selectionArgs);
-    }
+    default Cursor rawQueryCursor(@NonNull final String sql, @Nullable final Object[] selectionArgs) ;
     /**
      * 执行sel语句
      * @param sql 需要查询的语句
@@ -221,9 +179,7 @@
      * @param bindArgs 条件
      * @return true 成功
      */
-    default boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs) {
-        return getDatabase().execSQL(sql, bindArgs);
-    }
+    default boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs);
 ```
 
 
@@ -250,25 +206,19 @@
      * @return 创建表语句
      */
     @NonNull
-    default String getCreateTableSql() {
-        return "CREATE TABLE IF NOT EXISTS '" + getTableName() + "' ";
-    }
+    default String getCreateTableSql();
 
     /**
      * 主键
      */
     @NonNull
-    default String getCreateTablePrimaryKeySql() {
-        return " '" + getPrimaryKey() + "' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ";
-    }
+    default String getCreateTablePrimaryKeySql();
 
     /**
      * 判断数据表是否存在
      * @return true 存在
      */
-    default boolean isExist() {
-        return getDatabase().tableIsExist(getTableName());
-    }
+    default boolean isExist();
 
     /**
      * 创建表
@@ -280,41 +230,28 @@
     /**
      * 检查表是否存在，不存在则创建
      */
-    default void checkTableExist() {
-        if (!isExist()) {
-            createTable(getCreateTableSql(), getCreateTablePrimaryKeySql());
-        }
-    }
+    default void checkTableExist();
 
     /**
      * 获取表的创建语句
      * @return 表的创建语句
      */
     @Nullable
-    default String getCreateSqlForMaster() {
-        checkTableExist();
-        return getDatabase().getCreateSqlForMaster(getTableName());
-    }
+    default String getCreateSqlForMaster();
 
     /**
      *  执行sql语句
      * @param sql 需要执行的语句
      * @return true 执行成功
      */
-    default boolean execute(@NonNull String sql) {
-        checkTableExist();
-        return getDatabase().execSQL(sql);
-    }
+    default boolean execute(@NonNull String sql);
     /**
      * 执行sql语句
      * @param sql 需要执行的语句
      * @param arguments 条件
      * @return true 成功
      */
-    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments) {
-        checkTableExist();
-        return getDatabase().execSQL(sql, arguments);
-    }
+    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments);
 
     /**
      * 根据主键查询
@@ -322,148 +259,84 @@
      * @return 查询结果
      */
     @Nullable
-    default Map<String, Object> queryFirstByPrimaryKey(@NonNull final Object primaryKeyValue) {
-        checkTableExist();
-        return getDatabase().queryFirstByPrimaryKey(getTableName(), getPrimaryKey(), primaryKeyValue);
-    }
+    default Map<String, Object> queryFirstByPrimaryKey(@NonNull final Object primaryKeyValue);
 
     @Nullable
     default List<Map<String, Object>> query(boolean distinct, @Nullable final String[] columns,
                                             @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
                                             @Nullable final String having, @Nullable final String orderBy, @Nullable final Integer limit,
-                                            @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase()
-                .query(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset);
-    }
+                                            @Nullable final Integer offset);
 
     @Nullable
     default Map<String, Object> queryFirst(boolean distinct, @Nullable final String[] columns, String where,
                                            Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                           @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase()
-                .queryFirst(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit,
-                        offset);
-    }
+                                           @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset);
 
     /**
      * 查询全部
      * @return 查询结果
      */
     @Nullable
-    default List<Map<String, Object>> queryAll() {
-        checkTableExist();
-        return getDatabase().queryAll(getTableName());
-    }
+    default List<Map<String, Object>> queryAll();
 
     @Nullable
     default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), columns, where, whereArgs);
-    }
+                                            @NonNull final Object[] whereArgs);
 
     @Nullable
     default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
                                             @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                            @Nullable final String orderBy) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), columns, where, whereArgs, groupBy, having, orderBy);
-    }
+                                            @Nullable final String orderBy);
 
     @Nullable
-    default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), where, whereArgs);
-    }
+    default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs);
 
     @Nullable
     default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                            @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), where, whereArgs, groupBy, having, orderBy);
-    }
+                                            @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy);
 
     @Nullable
     default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                            @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), where, whereArgs, limit, offset);
-    }
+                                            @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().query(getTableName(), columns, where, whereArgs, limit, offset);
-    }
+                                            @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), columns, where, whereArgs);
-    }
+                                           @NonNull final Object[] whereArgs);
 
     @Nullable
     default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
                                            @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                           @Nullable final String orderBy) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), columns, where, whereArgs, groupBy, having, orderBy);
-    }
+                                           @Nullable final String orderBy);
 
     @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), where, whereArgs);
-    }
+    default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs)‘
 
     @Nullable
     default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                           @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), where, whereArgs, groupBy, having, orderBy);
-    }
+                                           @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy);
 
     @Nullable
     default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                           @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), where, whereArgs, limit, offset);
-    }
-
+                                           @Nullable final Integer limit, @Nullable final Integer offset);
     @Nullable
     default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().queryFirst(getTableName(), columns, where, whereArgs, limit, offset);
-    }
+                                           @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
-    default Cursor queryCursorAll() {
-        checkTableExist();
-        return getDatabase().queryCursorAll(getTableName());
-    }
+    default Cursor queryCursorAll();
 
     @Nullable
-    default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().queryCursor(getTableName(), where, whereArgs);
-    }
+    default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs);
 
     default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().queryCursor(getTableName(), columns, where, whereArgs);
-    }
+                               @NonNull final Object[] whereArgs);
 
     default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs,
-                               @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
-        checkTableExist();
-        return getDatabase().queryCursor(getTableName(), where, whereArgs, groupBy, having, orderBy);
-    }
+                               @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy);
 
     default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
                                @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
@@ -473,92 +346,51 @@
     }
 
     default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs,
-                               @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().queryCursor(getTableName(), where, whereArgs, limit, offset);
-    }
+                               @Nullable final Integer limit, @Nullable final Integer offset);
 
     default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase().queryCursor(getTableName(), columns, where, whereArgs, limit, offset);
-    }
+                               @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset);
 
     default Cursor queryCursor(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
                                @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                               @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
-        checkTableExist();
-        return getDatabase()
-                .queryCursor(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit,
-                        offset);
-    }
+                               @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset);
 
     default long insert(@NonNull final List<Map<String, Object>> values,
-                        @NonNull final ConflictAlgorithm conflictAlgorithm) {
-        checkTableExist();
-        return getDatabase().insert(getTableName(), null, values, conflictAlgorithm);
-    }
+                        @NonNull final ConflictAlgorithm conflictAlgorithm);
 
-    default long insert(@NonNull final Map<String, Object> values, @NonNull final ConflictAlgorithm conflictAlgorithm) {
-        checkTableExist();
-        return getDatabase().insert(getTableName(), null, values, conflictAlgorithm);
-    }
+    default long insert(@NonNull final Map<String, Object> values, @NonNull final ConflictAlgorithm conflictAlgorithm);
 
-    default long insert(@NonNull final List<Map<String, Object>> values) {
-        checkTableExist();
-        return getDatabase().insert(getTableName(), null, values);
-    }
+    default long insert(@NonNull final List<Map<String, Object>> values);
 
 
-    default long insert(@NonNull final Map<String, Object> values) {
-        checkTableExist();
-        return getDatabase().insert(getTableName(), null, values);
-    }
+    default long insert(@NonNull final Map<String, Object> values);
 
     default long update(@NonNull final Map<String, Object> values, @NonNull final String where,
-                        @NonNull final Object[] whereArgs, @NonNull final ConflictAlgorithm conflictAlgorithm) {
-        checkTableExist();
-        return getDatabase().update(getTableName(), values, where, whereArgs, conflictAlgorithm);
-    }
+                        @NonNull final Object[] whereArgs, @NonNull final ConflictAlgorithm conflictAlgorithm);
 
     default long update(@NonNull final Map<String, Object> values, @NonNull final String where,
-                        @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().update(getTableName(), values, where, whereArgs);
-    }
+                        @NonNull final Object[] whereArgs);
 
-    default long delete(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        checkTableExist();
-        return getDatabase().delete(getTableName(), where, whereArgs);
-    }
+    default long delete(@NonNull final String where, @NonNull final Object[] whereArgs);
 
     /**
      * 清空表的数据
      * @return true 清空的条数
      */
-    default long clearTableData() {
-        checkTableExist();
-        return getDatabase().delete(getTableName(), null, null);
-    }
+    default long clearTableData();
 
     /**
      * 根据主键删除数据
      * @param whereIn 删除条件
      * @return true 删除成功
      */
-    default boolean deleteByPrimaryKey(@NonNull final Object[] whereIn) {
-        checkTableExist();
-        return getDatabase().deleteByPrimaryKey(getTableName(), getPrimaryKey(), whereIn);
-    }
+    default boolean deleteByPrimaryKey(@NonNull final Object[] whereIn);
     /**
      * 根据主键删除数据
      * @param primaryKeyValue 删除条件
      * @return 删除条数
      */
-    default long deleteByPrimaryKey(@NonNull final Object primaryKeyValue) {
-        checkTableExist();
-        return getDatabase().deleteByPrimaryKey(getTableName(), getPrimaryKey(), primaryKeyValue);
-    }
+    default long deleteByPrimaryKey(@NonNull final Object primaryKeyValue);
 
     /**
      * 保存或者更新数据
@@ -568,31 +400,13 @@
      * @return true 保存或者更新成功
      */
     default boolean saveOrUpdate(@NonNull final Map<String, Object> values, @NonNull final String where,
-                                 @NonNull final String[] whereArgs) {
-        final String createSqlForMaster = getCreateSqlForMaster();
-        final Map<String, Object> oldMap = queryFirst(where, whereArgs);
-        if (oldMap != null && !oldMap.isEmpty()) {
-            final SqlBuilder sqlBuilder = new SqlBuilder().mergeMap(oldMap, values, createSqlForMaster);
-            beforeUpdate(sqlBuilder.mapValues, oldMap);
-            return update(sqlBuilder.mapValues, where, whereArgs) > 0;
-        } else {
-            final SqlBuilder sqlBuilder = new SqlBuilder().filterMap(values, createSqlForMaster);
-            beforeInsert(sqlBuilder.mapValues);
-            return insert(sqlBuilder.mapValues) > 0;
-        }
-    }
+                                 @NonNull final String[] whereArgs);
     /**
      * 根据主键保存或者更新数据
      * @param map 更新的数据
      * @return true 保存或者更新成功
      */
-    default boolean saveOrUpdate(@NonNull final Map<String, Object> map) {
-        String primaryValue = String.valueOf(map.get(getPrimaryKey()));
-        if (TextUtils.isEmpty(primaryValue)) {
-            return false;
-        }
-        return saveOrUpdate(map, " " + getPrimaryKey() + "=? ", new String[]{primaryValue});
-    }
+    default boolean saveOrUpdate(@NonNull final Map<String, Object> map);
 
     /**
      * 插入数据之前
@@ -605,9 +419,7 @@
      * @param mapValues 要更新的数据
      * @param oldMap 之前的数据
      */
-    default void beforeUpdate(@NonNull final Map<String, Object> mapValues, @NonNull final Map<String, Object> oldMap) {
-        mapValues.put(getPrimaryKey(), oldMap.get(getPrimaryKey()));
-    }
+    default void beforeUpdate(@NonNull final Map<String, Object> mapValues, @NonNull final Map<String, Object> oldMap);
 ```
 
 
@@ -615,100 +427,68 @@
 
 ```java
     @Nullable
-    default TABLE queryFirstTableByPrimaryKey(@NonNull final Object primaryKeyValue) {
-        return queryFirstTable(getPrimaryKey() + " =?", new String[]{String.valueOf(primaryKeyValue)});
-    }
+    default TABLE queryFirstTableByPrimaryKey(@NonNull final Object primaryKeyValue);
 
     @Nullable
     default List<TABLE> queryTable(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
                                    @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                   @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTableList(queryCursor(distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset));
-    }
+                                   @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default TABLE queryFirstTable(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
                                   @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                  @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTable(queryCursor(distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset));
-    }
+                                  @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
-                                   @NonNull final Object[] whereArgs) {
-        return toTableList(queryCursor(columns, where, whereArgs));
-    }
+                                   @NonNull final Object[] whereArgs);
 
     @Nullable
     default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
                                    @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                   @Nullable final String orderBy) {
-        return toTableList(queryCursor(columns, where, whereArgs, groupBy, having, orderBy));
-    }
+                                   @Nullable final String orderBy);
 
     @Nullable
-    default List<TABLE> queryTableAll() {
-        return toTableList(queryCursorAll());
-    }
+    default List<TABLE> queryTableAll();
 
     @Nullable
-    default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        return toTableList(queryCursor(where, whereArgs));
-    }
+    default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs);
 
     @Nullable
     default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                   @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
-        return toTableList(queryCursor(where, whereArgs, groupBy, having, orderBy));
-    }
+                                   @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy);
 
     @Nullable
     default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                   @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTableList(queryCursor(where, whereArgs, limit, offset));
-    }
+                                   @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
-                                   @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTableList(queryCursor(columns, where, whereArgs, limit, offset));
-    }
+                                   @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
-                                  @NonNull final Object[] whereArgs) {
-        return toTable(queryCursor(columns, where, whereArgs));
-    }
+                                  @NonNull final Object[] whereArgs);
 
     @Nullable
     default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
                                   @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                  @Nullable final String orderBy) {
-        return toTable(queryCursor(columns, where, whereArgs, groupBy, having, orderBy));
-    }
+                                  @Nullable final String orderBy);
 
     @Nullable
-    default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs) {
-        return toTable(queryCursor(where, whereArgs));
-    }
+    default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs);
 
     @Nullable
     default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                  @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
-        return toTable(queryCursor(where, whereArgs, groupBy, having, orderBy));
-    }
+                                  @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy);
 
     @Nullable
     default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                  @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTable(queryCursor(where, whereArgs, limit, offset));
-    }
+                                  @Nullable final Integer limit, @Nullable final Integer offset);
 
     @Nullable
     default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
-                                  @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
-        return toTable(queryCursor(columns, where, whereArgs, limit, offset));
-    }
+                                  @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset);
     /**
      * 保存或者更新数据
      * @param table 更新的实体
@@ -717,31 +497,19 @@
      * @return true 保存或者更新成功
      */
     default boolean saveOrUpdate(@NonNull final TABLE table, @NonNull final String where,
-                                 @NonNull final String[] whereArgs) {
-        final Map<String, Object> values = toMap(table);
-        return saveOrUpdate(values, where, whereArgs);
-    }
+                                 @NonNull final String[] whereArgs);
     /**
      * 根据主键保存或者更新数据
      * @param table 更新的实体
      * @return true 保存或者更新成功
      */
-    default boolean saveOrUpdate(@NonNull final TABLE table) {
-        final Map<String, Object> values = toMap(table);
-        return saveOrUpdate(values);
-    }
+    default boolean saveOrUpdate(@NonNull final TABLE table);
 
     /**
      * 将cursor转换为实体
      */
     @Nullable
-    default TABLE toTable(@Nullable Cursor cursor) {
-        @Nullable final List<TABLE> tableList = toTableList(cursor);
-        if (tableList == null || tableList.isEmpty()) {
-            return null;
-        }
-        return tableList.get(0);
-    }
+    default TABLE toTable(@Nullable Cursor cursor);
 
     /**
      * 将cursor转换为实体列表
