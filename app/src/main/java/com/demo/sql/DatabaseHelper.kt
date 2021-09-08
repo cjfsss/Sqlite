@@ -15,11 +15,8 @@ import android.database.sqlite.SQLiteOpenHelper
  */
 class DatabaseHelper(context: Context?) :
         SQLiteOpenHelper(context, "demo.db", null, 1) {
-
     override fun onCreate(db: SQLiteDatabase) {
-
     }
-
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
     }
 }

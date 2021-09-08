@@ -1,28 +1,235 @@
-package hos.sqlite.table;
 
-import android.database.Cursor;
-import android.text.TextUtils;
+<p align="center"><strong>Sqlite</strong></p>
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
-import hos.sqlite.datebase.ConflictAlgorithm;
-import hos.sqlite.datebase.SqlBuilder;
+* #####  加载已经存在的数据库
 
-import java.util.List;
-import java.util.Map;
+```kotlin
+    // 初始化数据库
+    DatabaseManger.setConfig(
+        DatabaseConfig.newBuilder().databasePath(
+            activity(),
+            PathManager.getDatabasePath(App.getApp().getDatabaseFileName())
+        ).build()
+    )
+```
 
-/**
- * <p>Title: BaseTable </p>
- * <p>Description:  </p>
- * <p>Company: www.mapuni.com </p>
- *
- * @author : 蔡俊峰
- * @version : 1.0
- * @date : 2020/6/18 13:49
- */
+* #####  加载新的数据库
 
-public interface TableMapDao extends DatabaseDao {
+```kotlin
+    // 创建数据库
+    class DatabaseHelper(context: Context?) :
+        SQLiteOpenHelper(context, "demo.db", null, 1) {
+    override fun onCreate(db: SQLiteDatabase) {
+    }
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+    }
+    // 载入数据库
+    DatabaseManger.setConfig(DatabaseConfig.newBuilder()
+            .setSqLiteDatabase(mDatabaseHelper.writableDatabase)
+            .build())
+}
+```
+
+* #####  使用  需要集成TableMapDao或者TableDao，直接调用内部方法就可以了
+
+
+* ##### DatabaseDao
+
+```java
+
+    /**
+     * 分页查询
+     * @param pageSize 一共几页
+     * @param pageIndex 第几页
+     * @return 分页sql
+     */
+    @NonNull
+    default String getPage(int pageSize, int pageIndex) {
+        return " LIMIT " + pageSize + " OFFSET " + pageIndex;
+    }
+
+    /**
+     * 获取Database
+     * @return Database
+     */
+    @NonNull
+    default Database getDatabase() {
+        return DatabaseManger.getDatabase();
+    }
+
+    /**
+     * 判断数据库是否存在
+     * @param tableName 表名
+     * @return true 数据库存在
+     */
+    default boolean isExist(@NonNull final String tableName) {
+        return getDatabase().tableIsExist(tableName);
+    }
+
+    /**
+     * 获取数据表语句
+     * @param tableName 表名
+     * @return 表语句
+     */
+    @Nullable
+    default String getCreateSqlForMaster(@NonNull final String tableName) {
+        return getDatabase().getCreateSqlForMaster(tableName);
+    }
+
+    /**
+     * 执行sql语句
+     * @param sql 需要执行的语句
+     * @return true 成功
+     */
+    default boolean execute(@NonNull String sql) {
+        return getDatabase().execSQL(sql);
+    }
+
+    /**
+     * 执行sql语句
+     * @param sql 需要执行的语句
+     * @param arguments 条件
+     * @return true 成功
+     */
+    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments) {
+        return getDatabase().execSQL(sql, arguments);
+    }
+
+    /**
+     * 更新数据
+     * @param sql 需要执行的语句
+     * @return 成功几条
+     */
+    default int rawUpdate(@NonNull final String sql) {
+        return getDatabase().rawUpdate(sql, null);
+    }
+
+    /**
+     * 更新数据
+     * @param sql 需要执行的语句
+     * @param whereArgs 条件
+     * @return 成功几条
+     */
+    default int rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+        return getDatabase().rawUpdate(sql, whereArgs);
+    }
+
+    /**
+     * 删除数据 
+     * @param sql 需要执行的语句
+     * @return 成功几条
+     */
+    default int rawDelete(@NonNull final String sql) {
+        return getDatabase().rawDelete(sql, null);
+    }
+    /**
+     * 删除数据
+     * @param sql 需要执行的语句
+     * @param whereArgs 条件
+     * @return 成功几条
+     */
+    default int rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+        return getDatabase().rawDelete(sql, whereArgs);
+    }
+    /**
+     * 插入数据
+     * @param sql 需要执行的语句
+     * @return 成功几条
+     */
+    default long rawInsert(@NonNull final String sql) {
+        return getDatabase().rawInsert(sql, null);
+    }
+    /**
+     * 插入数据
+     * @param sql 需要执行的语句
+     * @param whereArgs 条件
+     * @return 成功几条
+     */
+    default long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+        return getDatabase().rawInsert(sql, whereArgs);
+    }
+
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @return 返回的结果
+     */
+    @Nullable
+    default List<Map<String, Object>> rawQuery(@NonNull final String sql) {
+        return getDatabase().rawQuery(sql, null);
+    }
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @param arguments 条件
+     * @return 返回的结果
+     */
+    @Nullable
+    default List<Map<String, Object>> rawQuery(@NonNull final String sql, @Nullable final Object[] arguments) {
+        return getDatabase().rawQuery(sql, arguments);
+    }
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @return 返回的结果
+     */
+    @Nullable
+    default Map<String, Object> rawQueryFirst(@NonNull final String sql) {
+        return getDatabase().rawQueryFirst(sql, null);
+    }
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @param arguments 条件
+     * @return 返回的结果
+     */
+    @Nullable
+    default Map<String, Object> rawQueryFirst(@NonNull final String sql, @Nullable final Object[] arguments) {
+        return getDatabase().rawQueryFirst(sql, arguments);
+    }
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @return 返回的结果
+     */
+    @Nullable
+    default Cursor rawQueryCursor(@NonNull final String sql) {
+        return getDatabase().rawQueryCursor(sql, null);
+    }
+    /**
+     * 查询数据
+     * @param sql 需要查询的语句
+     * @param selectionArgs 条件
+     * @return 返回的结果
+     */
+    @Nullable
+    default Cursor rawQueryCursor(@NonNull final String sql, @Nullable final Object[] selectionArgs) {
+        return getDatabase().rawQueryCursor(sql, selectionArgs);
+    }
+    /**
+     * 执行sel语句
+     * @param sql 需要查询的语句
+     * @return true 成功
+     */
+    default boolean execSQL(@NonNull final String sql) {
+        return getDatabase().execSQL(sql);
+    }
+    /**
+     * 执行sel语句
+     * @param sql 需要查询的语句
+     * @param bindArgs 条件
+     * @return true 成功
+     */
+    default boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs) {
+        return getDatabase().execSQL(sql, bindArgs);
+    }
+```
+
+
+* ##### TableMapDao
+
+```java
     /**
      * 表名
      * @return 表名
@@ -401,4 +608,170 @@ public interface TableMapDao extends DatabaseDao {
     default void beforeUpdate(@NonNull final Map<String, Object> mapValues, @NonNull final Map<String, Object> oldMap) {
         mapValues.put(getPrimaryKey(), oldMap.get(getPrimaryKey()));
     }
+```
+
+
+* ##### TableDao
+
+```java
+@Nullable
+    default TABLE queryFirstTableByPrimaryKey(@NonNull final Object primaryKeyValue) {
+        return queryFirstTable(getPrimaryKey() + " =?", new String[]{String.valueOf(primaryKeyValue)});
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
+                                   @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
+                                   @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTableList(queryCursor(distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
+                                  @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
+                                  @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTable(queryCursor(distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset));
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
+                                   @NonNull final Object[] whereArgs) {
+        return toTableList(queryCursor(columns, where, whereArgs));
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
+                                   @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
+                                   @Nullable final String orderBy) {
+        return toTableList(queryCursor(columns, where, whereArgs, groupBy, having, orderBy));
+    }
+
+    @Nullable
+    default List<TABLE> queryTableAll() {
+        return toTableList(queryCursorAll());
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs) {
+        return toTableList(queryCursor(where, whereArgs));
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs,
+                                   @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
+        return toTableList(queryCursor(where, whereArgs, groupBy, having, orderBy));
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@NonNull final String where, @NonNull final Object[] whereArgs,
+                                   @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTableList(queryCursor(where, whereArgs, limit, offset));
+    }
+
+    @Nullable
+    default List<TABLE> queryTable(@Nullable final String[] columns, @NonNull final String where,
+                                   @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTableList(queryCursor(columns, where, whereArgs, limit, offset));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
+                                  @NonNull final Object[] whereArgs) {
+        return toTable(queryCursor(columns, where, whereArgs));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
+                                  @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
+                                  @Nullable final String orderBy) {
+        return toTable(queryCursor(columns, where, whereArgs, groupBy, having, orderBy));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs) {
+        return toTable(queryCursor(where, whereArgs));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs,
+                                  @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
+        return toTable(queryCursor(where, whereArgs, groupBy, having, orderBy));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@NonNull final String where, @NonNull final Object[] whereArgs,
+                                  @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTable(queryCursor(where, whereArgs, limit, offset));
+    }
+
+    @Nullable
+    default TABLE queryFirstTable(@Nullable final String[] columns, @NonNull final String where,
+                                  @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+        return toTable(queryCursor(columns, where, whereArgs, limit, offset));
+    }
+
+    default boolean saveOrUpdate(@NonNull final TABLE table, @NonNull final String where,
+                                 @NonNull final String[] whereArgs) {
+        final Map<String, Object> values = toMap(table);
+        return saveOrUpdate(values, where, whereArgs);
+    }
+
+    default boolean saveOrUpdate(@NonNull final TABLE table) {
+        final Map<String, Object> values = toMap(table);
+        return saveOrUpdate(values);
+    }
+
+    @Nullable
+    default TABLE toTable(@Nullable Cursor cursor) {
+        @Nullable final List<TABLE> tableList = toTableList(cursor);
+        if (tableList == null || tableList.isEmpty()) {
+            return null;
+        }
+        return tableList.get(0);
+    }
+
+    @Nullable
+    List<TABLE> toTableList(@Nullable Cursor cursor);
+
+    @NonNull
+    Map<String, Object> toMap(@NonNull final TABLE table);
+```
+
+----------------
+
+在项目根目录的 build.gradle 添加仓库
+
+```groovy
+allprojects {
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+    }
 }
+```
+
+在 module 的 build.gradle 添加依赖
+
+```groovy
+    api 'androidx.annotation:annotation:1.2.0'
+    api 'androidx.core:core:1.5.0'
+```
+
+<br>
+
+
+## License
+
+```
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

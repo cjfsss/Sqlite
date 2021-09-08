@@ -5,6 +5,7 @@ import android.text.TextUtils
 import com.blankj.utilcode.util.TimeUtils
 import hos.sqlite.table.TableDao
 import hos.utils.CloseUtils
+import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -37,9 +38,10 @@ class TableInfoDao : TableDao<TableInfo> {
 
     override fun saveOrUpdate(map: MutableMap<String, Any?>): Boolean {
         val tableName = map["tableName"].toString()
-        return if (TextUtils.isEmpty(tableName)) {
-            false
-        } else saveOrUpdate(map, " tableName=? ", arrayOf(tableName))
+        if (TextUtils.isEmpty(tableName)) {
+            throw NullPointerException("tableName is null")
+        }
+        return saveOrUpdate(map, " tableName=? ", arrayOf(tableName))
     }
 
     override fun toTableList(cursor: Cursor?): MutableList<TableInfo>? {
@@ -88,6 +90,4 @@ class TableInfoDao : TableDao<TableInfo> {
         mapValues["createTime"] = oldMap["createTime"].toString()
         mapValues["id"] = oldMap["id"].toString().toLong()
     }
-
-
 }
