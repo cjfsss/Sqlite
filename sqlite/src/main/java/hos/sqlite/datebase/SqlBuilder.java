@@ -218,6 +218,59 @@ public class SqlBuilder {
         return this;
     }
 
+    public SqlBuilder insertList(String table, ContentValues values, String nullColumnHack,
+                                 ConflictAlgorithm conflictAlgorithm) {
+        return insertList(table, contentValuesToMap(values).mapValues, nullColumnHack,
+                conflictAlgorithm(conflictAlgorithm).conflictIndex);
+    }
+
+    public SqlBuilder insertList(String table, Map<String, Object> values, String nullColumnHack,
+                                 ConflictAlgorithm conflictAlgorithm) {
+        return insertList(table, values, nullColumnHack, conflictAlgorithm(conflictAlgorithm).conflictIndex);
+    }
+
+    public SqlBuilder insertList(String table, Map<String, Object> values, String nullColumnHack, Integer conflictIndex) {
+        final StringBuilder insert = new StringBuilder();
+        insert.append("INSERT");
+        if (conflictIndex != null) {
+            insert.append(CONFLICT_VALUES[conflictIndex]);
+        }
+        insert.append(" INTO ");
+        insert.append(table);
+        insert.append(" (");
+
+        final List<String> bindArgs = new ArrayList<>();
+        final int size = (values != null) ? values.size() : 0;
+
+        if (size > 0) {
+            this.contentValues.clear();
+            final StringBuilder sbValues = new StringBuilder(") VALUES (");
+            int i = 0;
+            for (String colName : values.keySet()) {
+                Object value = values.get(colName);
+                getContentValue(this.contentValues, colName, value);
+                if (i++ > 0) {
+                    insert.append(", ");
+                    sbValues.append(", ");
+                }
+                insert.append(colName);
+                bindArgs.add(String.valueOf(value));
+                sbValues.append("?");
+            }
+            insert.append(sbValues);
+        } else {
+            if (nullColumnHack == null) {
+                throw new SQLArgumentException("nullColumnHack required when inserting no data");
+            }
+            insert.append(nullColumnHack).append(") VALUES (NULL");
+        }
+        insert.append(") ");
+
+        sql = insert.toString();
+        arguments = bindArgs.toArray(new String[]{});
+        return this;
+    }
+
     public SqlBuilder update(String table, ContentValues values, String where, Object[] whereArgs,
                              ConflictAlgorithm conflictAlgorithm) {
         return update(table, contentValuesToMap(values).mapValues, where, whereArgs, conflictAlgorithm);
@@ -250,6 +303,49 @@ public class SqlBuilder {
             } else {
                 update.append(" = NULL");
             }
+        }
+        if (whereArgs != null && whereArgs.length != 0) {
+            int length = whereArgs.length;
+            this.whereArgs = new String[length];
+            for (int j = 0; j < length; j++) {
+                this.whereArgs[j] = String.valueOf(whereArgs[j]);
+                bindArgs.add(String.valueOf(whereArgs[j]));
+            }
+        }
+        _writeClause(update, " WHERE ", where);
+        sql = update.toString();
+        arguments = bindArgs.toArray(new String[]{});
+        return this;
+    }
+
+    public SqlBuilder updateList(String table, ContentValues values, String where, Object[] whereArgs,
+                                 ConflictAlgorithm conflictAlgorithm) {
+        return updateList(table, contentValuesToMap(values).mapValues, where, whereArgs, conflictAlgorithm);
+    }
+
+    public SqlBuilder updateList(String table, Map<String, Object> values, String where, Object[] whereArgs,
+                                 ConflictAlgorithm conflictAlgorithm) {
+        if (values == null || values.size() == 0) {
+            throw new SQLArgumentException("Empty values");
+        }
+        final StringBuffer update = new StringBuffer();
+        update.append("UPDATE ");
+        if (conflictAlgorithm != null) {
+            update.append(CONFLICT_VALUES[conflictAlgorithm(conflictAlgorithm).conflictIndex]);
+        }
+        update.append(table);
+        update.append(" SET ");
+
+        final List<String> bindArgs = new ArrayList<>();
+        int i = 0;
+        this.contentValues.clear();
+        for (String colName : values.keySet()) {
+            update.append((i++ > 0) ? ", " : " ");
+            update.append(colName);
+            Object value = values.get(colName);
+            getContentValue(this.contentValues, colName, value);
+            bindArgs.add(String.valueOf(value));
+            update.append(" = ?");
         }
         if (whereArgs != null && whereArgs.length != 0) {
             int length = whereArgs.length;
@@ -425,7 +521,7 @@ public class SqlBuilder {
             if (isEmpty(value)) {
                 map.put(key, "");
             } else {
-                map.put(key,  String.valueOf(value));
+                map.put(key, String.valueOf(value));
             }
         }
     }

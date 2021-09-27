@@ -7,14 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 
+import java.util.List;
+import java.util.Map;
+
 import hos.sqlite.SQLite;
 import hos.sqlite.SQLiteExecutor;
 import hos.sqlite.datebase.ConflictAlgorithm;
 import hos.sqlite.datebase.SqlBuilder;
 import hos.utils.CloseUtils;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Title: SQLiteDatabase </p>
@@ -35,8 +35,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     @Override
     public int update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
-        SqlBuilder insert = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
-        return (int) statement(insert.sql, insert.arguments, statement -> {
+        SqlBuilder update = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
+        return (int) statement(update.sql, update.arguments, statement -> {
             final long count;
             if ((count = statement.executeUpdateDelete()) <= 0) {
                 Log.w("database", "更新数据出错，错误数据是:" + statement.toString());
@@ -50,23 +50,23 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         final int size = valueList.size();
         if (size == 0) {
-            Log.e("database", "Error inserting " + table + " values null");
+            Log.e("database", "Error update " + table + " values null");
             return -1;
         }
-        SqlBuilder insert = new SqlBuilder().update(table, valueList.get(0), whereClause, whereArgs, conflictAlgorithm);
-        return (int) statement(insert.sql, statement -> {
+        SqlBuilder update = new SqlBuilder().updateList(table, valueList.get(0), whereClause, whereArgs, conflictAlgorithm);
+        return (int) statement(update.sql, statement -> {
             long count = 0;
             for (Map<String, Object> map : valueList) {
                 try {
                     statement.clearBindings();
-                    insert.statement(statement, map);
+                    update.statement(statement, map);
                     if (statement.executeUpdateDelete() > 0) {
                         count++;
                     } else {
-                        Log.w("database", "Error inserting:" + statement.toString());
+                        Log.w("database", "Error update:" + statement.toString());
                     }
                 } catch (SQLException e) {
-                    Log.e("database", "Error inserting " + statement.toString(), e);
+                    Log.e("database", "Error update " + statement.toString(), e);
                 }
             }
             return count;
@@ -117,7 +117,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
             Log.e("database", "Error inserting " + table + " values null");
             return -1;
         }
-        SqlBuilder insert = new SqlBuilder().insert(table, valueList.get(0), nullColumnHack, conflictAlgorithm);
+        SqlBuilder insert = new SqlBuilder().insertList(table, valueList.get(0), nullColumnHack, conflictAlgorithm);
         Function<SQLiteStatement<?>, Long> transaction = statement -> {
             long count = 0L;
             for (Map<String, Object> map : valueList) {
