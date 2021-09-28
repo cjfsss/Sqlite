@@ -41,6 +41,6 @@ uploadArchives{
         repository(url:"file:///C:/Users/Administrator/.m2/repository")
         pom.groupId = "energy"
         pom.artifactId = "sqlite"
-        pom.version = "0.0.1"
+        pom.version = "0.0.2"
     }
 }
