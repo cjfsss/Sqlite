@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
+import hos.sqlite.datebase.Database;
 import hos.sqlite.exception.SQLArgumentException;
 import hos.sqlite.exception.SQLNullException;
 import hos.sqlite.statement.SQLiteDatabase;
@@ -64,7 +65,7 @@ public class DatabaseConfig {
         return mSqLiteDatabase;
     }
 
-    DatabaseImpl getDatabase() {
+    Database getDatabase() {
         if (mDatabase == null) {
             return new DatabaseImpl();
         }

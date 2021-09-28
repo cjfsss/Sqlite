@@ -5,10 +5,11 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
+
+import hos.sqlite.datebase.Database;
 import hos.sqlite.exception.SQLNullException;
 import hos.sqlite.statement.SQLiteDatabase;
-
-import java.io.File;
 
 /**
  * <p>Title: DatabaseManger </p>
@@ -50,7 +51,7 @@ public class DatabaseManger {
         return sConfig.getSqLiteDatabase();
     }
 
-    public static DatabaseImpl getDatabase() {
+    public static Database getDatabase() {
         return sConfig.getDatabase();
     }
 
