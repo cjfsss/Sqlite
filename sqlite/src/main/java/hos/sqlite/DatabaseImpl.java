@@ -21,7 +21,7 @@ import java.util.Map;
  * @version : 1.0
  * @date : 2021/1/27 18:47
  */
-class DatabaseImpl implements Database {
+final class DatabaseImpl implements Database {
 
     @NonNull
     @Override
