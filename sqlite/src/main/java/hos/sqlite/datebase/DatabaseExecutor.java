@@ -199,40 +199,12 @@ public interface DatabaseExecutor extends SQLiteExecutor,
     @Override
     default long insert(@NonNull String table, @Nullable String nullColumnHack,
                         @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
-        final int size = valueList.size();
-        if (size == 0) {
-            Log.e("database", "Error inserting " + table + " values null");
-            return -1;
-        }
-        SqlBuilder insert = new SqlBuilder().insert(table, valueList.get(0), nullColumnHack, conflictAlgorithm);
-        return transaction(insert.sql, statement -> {
-            long count = 0;
-            for (Map<String, Object> map : valueList) {
-                try {
-                    statement.clearBindings();
-                    new SqlBuilder().statement(statement, map);
-                    if (statement.executeInsert() > 0) {
-                        count++;
-                    } else {
-                        Log.w("database", "Error inserting:" + statement.toString());
-                    }
-                } catch (SQLException e) {
-                    Log.e("database", "Error inserting " + statement.toString(), e);
-                }
-            }
-            return count;
-        });
+        return getConnection().insert(table, nullColumnHack, valueList, conflictAlgorithm);
     }
 
     @Override
     default long rawInsert(@NonNull String sql, @Nullable Object[] whereArgs) {
-        return statement(sql, whereArgs, statement -> {
-            final long count;
-            if ((count = statement.executeInsert()) <= 0) {
-                Log.w("database", "插入数据出错，错误数据是:" + statement.toString());
-            }
-            return count;
-        });
+        return getConnection().rawInsert(sql, whereArgs);
     }
 
     @Override
