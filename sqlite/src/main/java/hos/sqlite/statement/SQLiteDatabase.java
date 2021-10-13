@@ -48,29 +48,34 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     @Override
     public int update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
-        final int size = valueList.size();
-        if (size == 0) {
-            Log.e("database", "Error update " + table + " values null");
-            return -1;
+        int updateSize = 0;
+        for (Map<String, Object> map : valueList) {
+            updateSize += update(table, map, whereClause, whereArgs, conflictAlgorithm);
         }
-        SqlBuilder update = new SqlBuilder().updateList(table, valueList.get(0), whereClause, whereArgs, conflictAlgorithm);
-        return (int) statement(update.sql, statement -> {
-            long count = 0;
-            for (Map<String, Object> map : valueList) {
-                try {
-                    statement.clearBindings();
-                    update.statement(statement, map);
-                    if (statement.executeUpdateDelete() > 0) {
-                        count++;
-                    } else {
-                        Log.w("database", "Error update:" + statement.toString());
-                    }
-                } catch (SQLException e) {
-                    Log.e("database", "Error update " + statement.toString(), e);
-                }
-            }
-            return count;
-        });
+        return updateSize;
+//        final int size = valueList.size();
+//        if (size == 0) {
+//            Log.e("database", "Error update " + table + " values null");
+//            return -1;
+//        }
+//        SqlBuilder update = new SqlBuilder().updateList(table, valueList.get(0), whereClause, whereArgs, conflictAlgorithm);
+//        return (int) statement(update.sql, statement -> {
+//            long count = 0;
+//            for (Map<String, Object> map : valueList) {
+//                try {
+//                    statement.clearBindings();
+//                    update.statement(statement, map);
+//                    if (statement.executeUpdateDelete() > 0) {
+//                        count++;
+//                    } else {
+//                        Log.w("database", "Error update:" + statement.toString());
+//                    }
+//                } catch (SQLException e) {
+//                    Log.e("database", "Error update " + statement.toString(), e);
+//                }
+//            }
+//            return count;
+//        });
     }
 
     @Override
@@ -112,30 +117,35 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     @Override
     public long insert(@NonNull String table, @Nullable String nullColumnHack,
                        @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
-        final int size = valueList.size();
-        if (size == 0) {
-            Log.e("database", "Error inserting " + table + " values null");
-            return -1;
+        int insertSize = 0;
+        for (Map<String, Object> map : valueList) {
+            insertSize += insert(table, nullColumnHack, map, conflictAlgorithm);
         }
-        SqlBuilder insert = new SqlBuilder().insertList(table, valueList.get(0), nullColumnHack, conflictAlgorithm);
-        Function<SQLiteStatement<?>, Long> transaction = statement -> {
-            long count = 0L;
-            for (Map<String, Object> map : valueList) {
-                try {
-                    statement.clearBindings();
-                    new SqlBuilder().statement(statement, map);
-                    if (statement.executeInsert() > 0) {
-                        count++;
-                    } else {
-                        Log.w("database", "Error inserting:" + statement.toString());
-                    }
-                } catch (SQLException e) {
-                    Log.e("database", "Error inserting " + statement.toString(), e);
-                }
-            }
-            return count;
-        };
-        return this.transaction(insert.sql, transaction);
+        return insertSize;
+//        final int size = valueList.size();
+//        if (size == 0) {
+//            Log.e("database", "Error inserting " + table + " values null");
+//            return -1;
+//        }
+//        SqlBuilder insert = new SqlBuilder().insertList(table, valueList.get(0), nullColumnHack, conflictAlgorithm);
+//        Function<SQLiteStatement<?>, Long> transaction = statement -> {
+//            long count = 0L;
+//            for (Map<String, Object> map : valueList) {
+//                try {
+//                    statement.clearBindings();
+//                    new SqlBuilder().statement(statement, map);
+//                    if (statement.executeInsert() > 0) {
+//                        count++;
+//                    } else {
+//                        Log.w("database", "Error inserting:" + statement.toString());
+//                    }
+//                } catch (SQLException e) {
+//                    Log.e("database", "Error inserting " + statement.toString(), e);
+//                }
+//            }
+//            return count;
+//        };
+//        return this.transaction(insert.sql, transaction);
     }
 
     @Override
