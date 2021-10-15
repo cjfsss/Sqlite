@@ -157,19 +157,19 @@ public interface DatabaseExecutor extends SQLiteExecutor,
     }
 
     @Override
-    default int update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
+    default long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
                        @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().update(table, values, whereClause, whereArgs, conflictAlgorithm);
     }
 
     @Override
-    default int update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
+    default long update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
                        @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().update(table, valueList, whereClause, whereArgs, conflictAlgorithm);
     }
 
     @Override
-    default int rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
+    default long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
         return getConnection().rawUpdate(sql, whereArgs);
     }
 
@@ -179,7 +179,7 @@ public interface DatabaseExecutor extends SQLiteExecutor,
     }
 
     @Override
-    default int rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
+    default long rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
         return getConnection().rawDelete(sql, whereArgs);
     }
 

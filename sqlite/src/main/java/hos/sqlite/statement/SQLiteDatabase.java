@@ -33,10 +33,10 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     protected abstract <STATEMENT extends SQLiteStatement<STATEMENT>> SQLiteStatement<STATEMENT> compileStatement(@NonNull final String sql);
 
     @Override
-    public int update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
+    public long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         SqlBuilder update = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
-        return (int) statement(update.sql, update.arguments, statement -> {
+        return statement(update.sql, update.arguments, statement -> {
             final long count;
             if ((count = statement.executeUpdateDelete()) <= 0) {
                 Log.w("database", "更新数据出错，错误数据是:" + statement.toString());
@@ -46,13 +46,23 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public int update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
+    public long update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
-        int updateSize = 0;
-        for (Map<String, Object> map : valueList) {
-            updateSize += update(table, map, whereClause, whereArgs, conflictAlgorithm);
-        }
-        return updateSize;
+        return transaction(new Function<SQLiteDatabase, Long>() {
+            @Override
+            public Long apply(SQLiteDatabase input) {
+                @SuppressWarnings("WrapperTypeMayBePrimitive") Long updateSize = 0L;
+                for (Map<String, Object> map : valueList) {
+                    updateSize += update(table, map, whereClause, whereArgs, conflictAlgorithm);
+                }
+                return updateSize;
+            }
+        });
+//        int updateSize = 0;
+//        for (Map<String, Object> map : valueList) {
+//            updateSize += update(table, map, whereClause, whereArgs, conflictAlgorithm);
+//        }
+//        return updateSize;
 //        final int size = valueList.size();
 //        if (size == 0) {
 //            Log.e("database", "Error update " + table + " values null");
@@ -79,8 +89,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public int rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
-        return (int) statement(sql, whereArgs, statement -> {
+    public long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
+        return statement(sql, whereArgs, statement -> {
             final long count;
             if ((count = statement.executeUpdateDelete()) <= 0) {
                 Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
@@ -91,8 +101,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
 
 
     @Override
-    public int rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
-        return (int) statement(sql, whereArgs, statement -> {
+    public long rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
+        return statement(sql, whereArgs, statement -> {
             final long count;
             if ((count = statement.executeUpdateDelete()) <= 0) {
                 Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
@@ -117,11 +127,21 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     @Override
     public long insert(@NonNull String table, @Nullable String nullColumnHack,
                        @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
-        int insertSize = 0;
-        for (Map<String, Object> map : valueList) {
-            insertSize += insert(table, nullColumnHack, map, conflictAlgorithm);
-        }
-        return insertSize;
+        return transaction(new Function<SQLiteDatabase, Long>() {
+            @Override
+            public Long apply(SQLiteDatabase input) {
+                long insertSize = 0;
+                for (Map<String, Object> map : valueList) {
+                    insertSize += insert(table, nullColumnHack, map, conflictAlgorithm);
+                }
+                return insertSize;
+            }
+        });
+//        long insertSize = 0;
+//        for (Map<String, Object> map : valueList) {
+//            insertSize += insert(table, nullColumnHack, map, conflictAlgorithm);
+//        }
+//        return insertSize;
 //        final int size = valueList.size();
 //        if (size == 0) {
 //            Log.e("database", "Error inserting " + table + " values null");

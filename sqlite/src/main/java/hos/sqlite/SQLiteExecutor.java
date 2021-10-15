@@ -244,27 +244,27 @@ public interface SQLiteExecutor {
         return update(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    int update(@NonNull final String table, @NonNull final Map<String, Object> values,
+    long update(@NonNull final String table, @NonNull final Map<String, Object> values,
                @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default int update(@NonNull final String table, @NonNull final Map<String, Object> values,
+    default long update(@NonNull final String table, @NonNull final Map<String, Object> values,
                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
         return update(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    int update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
+    long update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
                @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default int update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
+    default long update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
         return update(table, valueList, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    int rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs);
+    long rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs);
 
     int delete(@NonNull final String table, @Nullable final String whereClause, @Nullable final Object[] whereArgs);
 
-    int rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs);
+    long rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs);
 
     long insert(@NonNull final String table, @Nullable final String nullColumnHack, @NonNull final ContentValues values,
                 ConflictAlgorithm conflictAlgorithm);

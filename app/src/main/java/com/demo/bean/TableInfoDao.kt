@@ -90,4 +90,10 @@ class TableInfoDao : TableDao<TableInfo> {
         mapValues["createTime"] = oldMap["createTime"].toString()
         mapValues["id"] = oldMap["id"].toString().toLong()
     }
+
+    fun transactionInsert(){
+        database.transaction {
+            return@transaction -1L;
+        }
+    }
 }

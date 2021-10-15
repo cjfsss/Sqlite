@@ -84,7 +84,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default int rawUpdate(@NonNull final String sql) {
+    default long rawUpdate(@NonNull final String sql) {
         return getDatabase().rawUpdate(sql, null);
     }
 
@@ -94,7 +94,7 @@ public interface DatabaseDao {
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default int rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+    default long rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs) {
         return getDatabase().rawUpdate(sql, whereArgs);
     }
 
@@ -103,7 +103,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default int rawDelete(@NonNull final String sql) {
+    default long rawDelete(@NonNull final String sql) {
         return getDatabase().rawDelete(sql, null);
     }
     /**
@@ -112,7 +112,7 @@ public interface DatabaseDao {
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default int rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+    default long rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs) {
         return getDatabase().rawDelete(sql, whereArgs);
     }
     /**
