@@ -245,19 +245,27 @@ public interface SQLiteExecutor {
     }
 
     long update(@NonNull final String table, @NonNull final Map<String, Object> values,
-               @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+                @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
     default long update(@NonNull final String table, @NonNull final Map<String, Object> values,
-                       @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
         return update(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    long update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
-               @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+    long transactionUpdateValue(@NonNull final String table, @NonNull final List<ContentValues> values, @NonNull final String whereClause,
+                                @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default long update(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
-                       @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
-        return update(table, valueList, whereClause, whereArgs, ConflictAlgorithm.none);
+    default long transactionUpdateValue(@NonNull final String table, @NonNull final List<ContentValues> values,
+                                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+        return transactionUpdateValue(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
+    }
+
+    long transactionUpdate(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
+                           @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+
+    default long transactionUpdate(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
+                                   @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+        return transactionUpdate(table, valueList, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
     long rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs);
@@ -274,6 +282,15 @@ public interface SQLiteExecutor {
         return insert(table, nullColumnHack, values, ConflictAlgorithm.none);
     }
 
+
+    long transactionInsertValue(@NonNull final String table, @Nullable final String nullColumnHack, @NonNull final List<ContentValues> values,
+                                ConflictAlgorithm conflictAlgorithm);
+
+    default long transactionInsertValue(@NonNull final String table, @Nullable final String nullColumnHack,
+                                        @NonNull final List<ContentValues> values) {
+        return transactionInsertValue(table, nullColumnHack, values, ConflictAlgorithm.none);
+    }
+
     long insert(@NonNull final String table, @Nullable final String nullColumnHack,
                 @NonNull final Map<String, Object> values, ConflictAlgorithm conflictAlgorithm);
 
@@ -282,12 +299,12 @@ public interface SQLiteExecutor {
         return insert(table, nullColumnHack, values, ConflictAlgorithm.none);
     }
 
-    long insert(@NonNull final String table, @Nullable final String nullColumnHack,
-                @NonNull final List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm);
+    long transactionInsert(@NonNull final String table, @Nullable final String nullColumnHack,
+                           @NonNull final List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm);
 
-    default long insert(@NonNull final String table, @Nullable final String nullColumnHack,
-                        @NonNull final List<Map<String, Object>> valueList) {
-        return insert(table, nullColumnHack, valueList, ConflictAlgorithm.none);
+    default long transactionInsert(@NonNull final String table, @Nullable final String nullColumnHack,
+                                   @NonNull final List<Map<String, Object>> valueList) {
+        return transactionInsert(table, nullColumnHack, valueList, ConflictAlgorithm.none);
     }
 
     long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs);

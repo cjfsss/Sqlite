@@ -1,5 +1,6 @@
 package hos.sqlite.statement;
 
+import android.content.ContentValues;
 import android.database.SQLException;
 import android.util.Log;
 
@@ -34,7 +35,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
 
     @Override
     public long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
-                      @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         SqlBuilder update = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
         return statement(update.sql, update.arguments, statement -> {
             final long count;
@@ -46,8 +47,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
-                      @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionUpdate(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
+                                  @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
@@ -89,6 +90,20 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
+    public long transactionUpdateValue(@NonNull String table, @NonNull List<ContentValues> valueList, @NonNull String whereClause, @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+        return transaction(new Function<SQLiteDatabase, Long>() {
+            @Override
+            public Long apply(SQLiteDatabase input) {
+                Long updateSize = 0L;
+                for (ContentValues contentValues : valueList) {
+                    updateSize += update(table, contentValues, whereClause, whereArgs, conflictAlgorithm);
+                }
+                return updateSize;
+            }
+        });
+    }
+
+    @Override
     public long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
             final long count;
@@ -125,8 +140,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long insert(@NonNull String table, @Nullable String nullColumnHack,
-                       @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionInsert(@NonNull String table, @Nullable String nullColumnHack,
+                                  @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
@@ -166,6 +181,20 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
 //            return count;
 //        };
 //        return this.transaction(insert.sql, transaction);
+    }
+
+    @Override
+    public long transactionInsertValue(@NonNull String table, @Nullable String nullColumnHack, @NonNull List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
+        return transaction(new Function<SQLiteDatabase, Long>() {
+            @Override
+            public Long apply(SQLiteDatabase input) {
+                long insertSize = 0;
+                for (ContentValues values : valueList) {
+                    insertSize += insert(table, nullColumnHack, values, conflictAlgorithm);
+                }
+                return insertSize;
+            }
+        });
     }
 
     @Override

@@ -289,7 +289,7 @@ public interface TableMapDao extends DatabaseDao {
     default long insert(@NonNull final List<Map<String, Object>> values,
                         @NonNull final ConflictAlgorithm conflictAlgorithm) {
         checkTableExist();
-        return getDatabase().insert(getTableName(), null, values, conflictAlgorithm);
+        return getDatabase().transactionInsert(getTableName(), null, values, conflictAlgorithm);
     }
 
     default long insert(@NonNull final Map<String, Object> values, @NonNull final ConflictAlgorithm conflictAlgorithm) {
@@ -299,7 +299,7 @@ public interface TableMapDao extends DatabaseDao {
 
     default long insert(@NonNull final List<Map<String, Object>> values) {
         checkTableExist();
-        return getDatabase().insert(getTableName(), null, values);
+        return getDatabase().transactionInsert(getTableName(), null, values);
     }
 
 

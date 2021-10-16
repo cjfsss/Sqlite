@@ -1,15 +1,18 @@
 package hos.sqlite;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import hos.sqlite.datebase.ConflictAlgorithm;
 import hos.sqlite.datebase.Database;
 import hos.sqlite.statement.SQLiteDatabase;
 import hos.utils.CloseUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

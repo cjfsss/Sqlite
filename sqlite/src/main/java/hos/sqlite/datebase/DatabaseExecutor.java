@@ -10,14 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 
+import java.util.List;
+import java.util.Map;
+
 import hos.sqlite.SQLiteExecutor;
 import hos.sqlite.statement.SQLTransaction;
 import hos.sqlite.statement.SQLiteDatabase;
 import hos.sqlite.statement.SQLiteStatement;
 import hos.utils.CloseUtils;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>Title: DatabaseExecutor </p>
@@ -158,15 +158,22 @@ public interface DatabaseExecutor extends SQLiteExecutor,
 
     @Override
     default long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
-                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+                        @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().update(table, values, whereClause, whereArgs, conflictAlgorithm);
     }
 
     @Override
-    default long update(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
-                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
-        return getConnection().update(table, valueList, whereClause, whereArgs, conflictAlgorithm);
+    default long transactionUpdate(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
+                                   @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+        return getConnection().transactionUpdate(table, valueList, whereClause, whereArgs, conflictAlgorithm);
     }
+
+
+    @Override
+    default long transactionUpdateValue(@NonNull String table, @NonNull List<ContentValues> valueList, @NonNull String whereClause, @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+        return getConnection().transactionUpdateValue(table, valueList, whereClause, whereArgs, conflictAlgorithm);
+    }
+
 
     @Override
     default long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
@@ -197,9 +204,15 @@ public interface DatabaseExecutor extends SQLiteExecutor,
     }
 
     @Override
-    default long insert(@NonNull String table, @Nullable String nullColumnHack,
-                        @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
-        return getConnection().insert(table, nullColumnHack, valueList, conflictAlgorithm);
+    default long transactionInsert(@NonNull String table, @Nullable String nullColumnHack,
+                                   @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
+        return getConnection().transactionInsert(table, nullColumnHack, valueList, conflictAlgorithm);
+    }
+
+
+    @Override
+    default long transactionInsertValue(@NonNull String table, @Nullable String nullColumnHack, @NonNull List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
+        return getConnection().transactionInsertValue(table, nullColumnHack, valueList, conflictAlgorithm);
     }
 
     @Override
