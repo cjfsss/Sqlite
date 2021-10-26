@@ -17,7 +17,7 @@ import java.util.Map;
  * @version : 1.0
  * @date : 2020/6/18 14:27
  */
-public interface TableDao<TABLE> extends TableMapDao {
+public interface TableDao<TABLE> extends TableMapSaveDao {
 
     @Nullable
     default TABLE queryFirstTableByPrimaryKey(@NonNull final Object primaryKeyValue) {

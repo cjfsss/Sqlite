@@ -129,7 +129,7 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
                 .insert(table, values, nullColumnHack, conflictAlgorithm);
         try {
             final long count;
-            if ((count = mSqLiteDatabase.insertWithOnConflict(table, nullColumnHack, values, insert.conflictIndex)) <=
+            if ((count = mSqLiteDatabase.insertWithOnConflict(table, nullColumnHack, values, insert.conflictIndex)) <
                     0) {
                 Log.w("database", "插入数据出错 " + insert.toString());
             }
@@ -148,7 +148,7 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
         try {
             final int count;
             if ((count = mSqLiteDatabase
-                    .updateWithOnConflict(table, values, whereClause, update.whereArgs, update.conflictIndex)) <= 0) {
+                    .updateWithOnConflict(table, values, whereClause, update.whereArgs, update.conflictIndex)) < 0) {
                 Log.w("database", "更新数据出错 " + update.toString());
             }
             return count;
@@ -163,7 +163,7 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
         SqlBuilder delete = new SqlBuilder().delete(table, whereClause, whereArgs);
         try {
             final int count;
-            if ((count = mSqLiteDatabase.delete(table, whereClause, delete.whereArgs)) <= 0) {
+            if ((count = mSqLiteDatabase.delete(table, whereClause, delete.whereArgs)) < 0) {
                 Log.w("database", "删除数据出错 " + delete.toString());
             }
             return count;

@@ -39,7 +39,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
         SqlBuilder update = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
         return statement(update.sql, update.arguments, statement -> {
             final long count;
-            if ((count = statement.executeUpdateDelete()) <= 0) {
+            if ((count = statement.executeUpdateDelete()) < 0) {
                 Log.w("database", "更新数据出错，错误数据是:" + statement.toString());
             }
             return count;
@@ -107,7 +107,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     public long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
             final long count;
-            if ((count = statement.executeUpdateDelete()) <= 0) {
+            if ((count = statement.executeUpdateDelete()) < 0) {
                 Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
             }
             return count;
@@ -119,7 +119,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     public long rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
             final long count;
-            if ((count = statement.executeUpdateDelete()) <= 0) {
+            if ((count = statement.executeUpdateDelete()) < 0) {
                 Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
             }
             return count;
@@ -132,7 +132,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
         SqlBuilder insert = new SqlBuilder().insert(table, values, nullColumnHack, conflictAlgorithm);
         return statement(insert.sql, insert.arguments, statement -> {
             final long count;
-            if ((count = statement.executeInsert()) <= 0) {
+            if ((count = statement.executeInsert()) < 0) {
                 Log.w("database", "插入数据出错，错误数据是:" + statement.toString());
             }
             return count;
@@ -201,7 +201,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     public long rawInsert(@NonNull String sql, @Nullable Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
             final long count;
-            if ((count = statement.executeInsert()) <= 0) {
+            if ((count = statement.executeInsert()) < 0) {
                 Log.w("database", "插入数据出错，错误数据是:" + statement.toString());
             }
             return count;
