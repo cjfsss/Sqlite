@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import hos.sqlite.exception.SQLArgumentException;
 import hos.sqlite.statement.SQLiteStatement;
@@ -383,7 +381,7 @@ public class SqlBuilder {
     }
 
 
-    public static String toWhereIn(@NonNull final Object... userIdArray) {
+    public static String toWhereIn(final Object... userIdArray) {
         int length = userIdArray.length;
         StringBuilder builder = new StringBuilder();
         builder.append(" IN (");
@@ -430,7 +428,7 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder contentValues(@NonNull final Map<String, Object> map) {
+    public SqlBuilder contentValues(final Map<String, Object> map) {
         /* 重新组装一下数据 */
         for (String key : map.keySet()) {
             getContentValue(contentValues, key, map.get(key));
@@ -438,7 +436,7 @@ public class SqlBuilder {
         return this;
     }
 
-    public SqlBuilder contentValuesToMap(@NonNull final ContentValues values) {
+    public SqlBuilder contentValuesToMap(final ContentValues values) {
         /* 重新组装一下数据 */
         mapValues = new HashMap<>();
         for (String key : values.keySet()) {
@@ -447,8 +445,8 @@ public class SqlBuilder {
         return this;
     }
 
-    @Nullable
-    public Object getValue(@NonNull final Cursor cursor, final int index) {
+
+    public Object getValue(final Cursor cursor, final int index) {
         try {
             return cursor.getString(index);
         } catch (Exception e) {
@@ -476,8 +474,8 @@ public class SqlBuilder {
         }
     }
 
-    private void getContentValue(@NonNull final ContentValues contentValues, @NonNull final String key,
-                                 @Nullable final Object value) {
+    private void getContentValue(final ContentValues contentValues, final String key,
+                                 final Object value) {
         if (value instanceof Integer) {
             contentValues.put(key, Integer.parseInt(String.valueOf(value)));
         } else if (value instanceof Long) {
@@ -501,8 +499,8 @@ public class SqlBuilder {
         }
     }
 
-    private static void getMap(@NonNull final Map<String, Object> map, @NonNull final String key,
-                               @Nullable final Object value) {
+    private static void getMap(final Map<String, Object> map, final String key,
+                               final Object value) {
         if (value instanceof Integer) {
             map.put(key, Integer.parseInt(String.valueOf(value)));
         } else if (value instanceof Long) {
@@ -526,8 +524,8 @@ public class SqlBuilder {
         }
     }
 
-    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(@NonNull final SQLiteStatement<STATEMENT> statement,
-                                                                         @Nullable final Object[] objects) {
+    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(final SQLiteStatement<STATEMENT> statement,
+                                                                         final Object[] objects) {
         if (objects == null || objects.length == 0) {
             return;
         }
@@ -538,7 +536,7 @@ public class SqlBuilder {
         }
     }
 
-    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(@NonNull final SQLiteStatement<STATEMENT> sqLiteStatement, int index, @Nullable final Object value) {
+    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(final SQLiteStatement<STATEMENT> sqLiteStatement, int index, final Object value) {
         if (value == null) {
             sqLiteStatement.bindNull(index);
             return;
@@ -558,7 +556,7 @@ public class SqlBuilder {
         }
     }
 
-    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(@NonNull final SQLiteStatement<STATEMENT> statement, @Nullable final Map<String, Object> map) {
+    public <STATEMENT extends SQLiteStatement<STATEMENT>> void statement(final SQLiteStatement<STATEMENT> statement, final Map<String, Object> map) {
         if (map == null || map.size() == 0) {
             return;
         }
@@ -572,14 +570,14 @@ public class SqlBuilder {
 
 
     public SqlBuilder mergeMap(Map<String, Object> oldMap, Map<String, Object> values, String createSqlForMaster) {
-        @NonNull final Set<String> keySet = oldMap.keySet();
+        final Set<String> keySet = oldMap.keySet();
         for (String key : keySet) {
             // 这里判断字段是否已经存在该表中
             if (createSqlForMaster != null && !createSqlForMaster.contains(key)) {
                 // 不包含,直接跳过
                 continue;
             }
-            @Nullable final Object value = values.get(key);
+            final Object value = values.get(key);
             if (value != null) {
                 getMap(oldMap, key, value);
             }
@@ -590,14 +588,14 @@ public class SqlBuilder {
 
     public SqlBuilder filterMap(Map<String, Object> values, String createSqlForMaster) {
         Map<String, Object> oldMap = new HashMap<>();
-        @NonNull final Set<String> keySet = values.keySet();
+        final Set<String> keySet = values.keySet();
         for (String key : keySet) {
             // 这里判断字段是否已经存在该表中
             if (createSqlForMaster != null && !createSqlForMaster.contains(key)) {
                 // 不包含,直接跳过
                 continue;
             }
-            @Nullable final Object value = values.get(key);
+            final Object value = values.get(key);
             if (value != null) {
                 getMap(oldMap, key, value);
             }
@@ -607,21 +605,21 @@ public class SqlBuilder {
     }
 
     public SqlBuilder json(String json, String sqlCreate) throws JSONException {
-        @NonNull final List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-        @NonNull final JSONArray jsonArray = new JSONArray(json);
-        @NonNull final int length = jsonArray.length();
+        final List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+        final JSONArray jsonArray = new JSONArray(json);
+        final int length = jsonArray.length();
         for (int i = 0; i < length; i++) {
-            @NonNull final JSONObject jsonObject = jsonArray.getJSONObject(i);
-            @NonNull final Iterator<String> keys = jsonObject.keys();
+            final JSONObject jsonObject = jsonArray.getJSONObject(i);
+            final Iterator<String> keys = jsonObject.keys();
             Map<String, Object> map = new HashMap<>();
             for (Iterator<String> keyI = keys; keyI.hasNext(); ) {
-                @NonNull final String key = (String) keyI.next();
+                final String key = (String) keyI.next();
                 // 这里判断字段是否已经存在该表中
                 if (sqlCreate != null && !sqlCreate.contains(key)) {
                     // 不包含,直接跳过
                     continue;
                 }
-                @Nullable final Object value = jsonObject.get(key);
+                final Object value = jsonObject.get(key);
                 getMap(map, key, value);
             }
             if (map.size() > 0) {

@@ -2,7 +2,7 @@ package hos.sqlite;
 
 import android.database.SQLException;
 
-import androidx.annotation.NonNull;
+
 
 import hos.sqlite.statement.SQLiteStatement;
 
@@ -19,8 +19,8 @@ final class SQLAndroidStatement extends SQLiteStatement<SQLAndroidStatement> {
 
     private final android.database.sqlite.SQLiteStatement mSqLiteStatement;
 
-    static SQLAndroidStatement createStatement(@NonNull final android.database.sqlite.SQLiteDatabase sqLiteDatabase,
-                                               @NonNull final String sql) {
+    static SQLAndroidStatement createStatement( final android.database.sqlite.SQLiteDatabase sqLiteDatabase,
+                                                final String sql) {
         return new SQLAndroidStatement(sqLiteDatabase, sql);
     }
 
@@ -99,7 +99,7 @@ final class SQLAndroidStatement extends SQLiteStatement<SQLAndroidStatement> {
         mSqLiteStatement.releaseReferenceFromContainer();
     }
 
-    @NonNull
+    
     @Override
     public String toString() {
         return mSqLiteStatement.toString();

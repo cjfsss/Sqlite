@@ -2,8 +2,8 @@ package hos.sqlite.table;
 
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+
 
 import hos.sqlite.DatabaseManger;
 import hos.sqlite.datebase.Database;
@@ -27,7 +27,7 @@ public interface DatabaseDao {
      * @param pageIndex 第几页
      * @return 分页sql
      */
-    @NonNull
+    
     default String getPage(int pageSize, int pageIndex) {
         return " LIMIT " + pageSize + " OFFSET " + pageIndex;
     }
@@ -36,7 +36,7 @@ public interface DatabaseDao {
      * 获取Database
      * @return Database
      */
-    @NonNull
+    
     default Database getDatabase() {
         return DatabaseManger.getDatabase();
     }
@@ -46,7 +46,7 @@ public interface DatabaseDao {
      * @param tableName 表名
      * @return true 数据库存在
      */
-    default boolean isExist(@NonNull final String tableName) {
+    default boolean isExist( final String tableName) {
         return getDatabase().tableIsExist(tableName);
     }
 
@@ -55,8 +55,8 @@ public interface DatabaseDao {
      * @param tableName 表名
      * @return 表语句
      */
-    @Nullable
-    default String getCreateSqlForMaster(@NonNull final String tableName) {
+    
+    default String getCreateSqlForMaster( final String tableName) {
         return getDatabase().getCreateSqlForMaster(tableName);
     }
 
@@ -65,7 +65,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return true 成功
      */
-    default boolean execute(@NonNull String sql) {
+    default boolean execute( String sql) {
         return getDatabase().execSQL(sql);
     }
 
@@ -75,7 +75,7 @@ public interface DatabaseDao {
      * @param arguments 条件
      * @return true 成功
      */
-    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments) {
+    default boolean execute( final String sql,  final Object[] arguments) {
         return getDatabase().execSQL(sql, arguments);
     }
 
@@ -84,7 +84,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default long rawUpdate(@NonNull final String sql) {
+    default long rawUpdate( final String sql) {
         return getDatabase().rawUpdate(sql, null);
     }
 
@@ -94,7 +94,7 @@ public interface DatabaseDao {
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default long rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+    default long rawUpdate( final String sql,  final Object[] whereArgs) {
         return getDatabase().rawUpdate(sql, whereArgs);
     }
 
@@ -103,7 +103,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default long rawDelete(@NonNull final String sql) {
+    default long rawDelete( final String sql) {
         return getDatabase().rawDelete(sql, null);
     }
     /**
@@ -112,7 +112,7 @@ public interface DatabaseDao {
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default long rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+    default long rawDelete( final String sql,  final Object[] whereArgs) {
         return getDatabase().rawDelete(sql, whereArgs);
     }
     /**
@@ -120,7 +120,7 @@ public interface DatabaseDao {
      * @param sql 需要执行的语句
      * @return 成功几条
      */
-    default long rawInsert(@NonNull final String sql) {
+    default long rawInsert( final String sql) {
         return getDatabase().rawInsert(sql, null);
     }
     /**
@@ -129,7 +129,7 @@ public interface DatabaseDao {
      * @param whereArgs 条件
      * @return 成功几条
      */
-    default long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs) {
+    default long rawInsert( final String sql,  final Object[] whereArgs) {
         return getDatabase().rawInsert(sql, whereArgs);
     }
 
@@ -138,8 +138,8 @@ public interface DatabaseDao {
      * @param sql 需要查询的语句
      * @return 返回的结果
      */
-    @Nullable
-    default List<Map<String, Object>> rawQuery(@NonNull final String sql) {
+    
+    default List<Map<String, Object>> rawQuery( final String sql) {
         return getDatabase().rawQuery(sql, null);
     }
     /**
@@ -148,8 +148,8 @@ public interface DatabaseDao {
      * @param arguments 条件
      * @return 返回的结果
      */
-    @Nullable
-    default List<Map<String, Object>> rawQuery(@NonNull final String sql, @Nullable final Object[] arguments) {
+    
+    default List<Map<String, Object>> rawQuery( final String sql,  final Object[] arguments) {
         return getDatabase().rawQuery(sql, arguments);
     }
     /**
@@ -157,8 +157,8 @@ public interface DatabaseDao {
      * @param sql 需要查询的语句
      * @return 返回的结果
      */
-    @Nullable
-    default Map<String, Object> rawQueryFirst(@NonNull final String sql) {
+    
+    default Map<String, Object> rawQueryFirst( final String sql) {
         return getDatabase().rawQueryFirst(sql, null);
     }
     /**
@@ -167,8 +167,8 @@ public interface DatabaseDao {
      * @param arguments 条件
      * @return 返回的结果
      */
-    @Nullable
-    default Map<String, Object> rawQueryFirst(@NonNull final String sql, @Nullable final Object[] arguments) {
+    
+    default Map<String, Object> rawQueryFirst( final String sql,  final Object[] arguments) {
         return getDatabase().rawQueryFirst(sql, arguments);
     }
     /**
@@ -176,8 +176,8 @@ public interface DatabaseDao {
      * @param sql 需要查询的语句
      * @return 返回的结果
      */
-    @Nullable
-    default Cursor rawQueryCursor(@NonNull final String sql) {
+    
+    default Cursor rawQueryCursor( final String sql) {
         return getDatabase().rawQueryCursor(sql, null);
     }
     /**
@@ -186,8 +186,8 @@ public interface DatabaseDao {
      * @param selectionArgs 条件
      * @return 返回的结果
      */
-    @Nullable
-    default Cursor rawQueryCursor(@NonNull final String sql, @Nullable final Object[] selectionArgs) {
+    
+    default Cursor rawQueryCursor( final String sql,  final Object[] selectionArgs) {
         return getDatabase().rawQueryCursor(sql, selectionArgs);
     }
     /**
@@ -195,7 +195,7 @@ public interface DatabaseDao {
      * @param sql 需要查询的语句
      * @return true 成功
      */
-    default boolean execSQL(@NonNull final String sql) {
+    default boolean execSQL( final String sql) {
         return getDatabase().execSQL(sql);
     }
     /**
@@ -204,7 +204,7 @@ public interface DatabaseDao {
      * @param bindArgs 条件
      * @return true 成功
      */
-    default boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs) {
+    default boolean execSQL( final String sql,  final Object[] bindArgs) {
         return getDatabase().execSQL(sql, bindArgs);
     }
 

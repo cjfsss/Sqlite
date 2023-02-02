@@ -2,7 +2,7 @@ package hos.sqlite.table;
 
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
+
 
 import java.util.Map;
 
@@ -28,8 +28,8 @@ public interface TableMapSaveDao extends TableMapDao {
      * @param whereArgs 更新的条件
      * @return true 保存或者更新成功
      */
-    default boolean saveOrUpdate(@NonNull final Map<String, Object> values, @NonNull final String where,
-                                 @NonNull final String[] whereArgs) {
+    default boolean saveOrUpdate( final Map<String, Object> values,  final String where,
+                                  final String[] whereArgs) {
         final String createSqlForMaster = getCreateSqlForMaster();
         final Map<String, Object> oldMap = queryFirst(where, whereArgs);
         if (oldMap != null && !oldMap.isEmpty()) {
@@ -47,7 +47,7 @@ public interface TableMapSaveDao extends TableMapDao {
      * @param map 更新的数据
      * @return true 保存或者更新成功
      */
-    default boolean saveOrUpdate(@NonNull final Map<String, Object> map) {
+    default boolean saveOrUpdate( final Map<String, Object> map) {
         String primaryValue = String.valueOf(map.get(getPrimaryKey()));
         if (TextUtils.isEmpty(primaryValue)) {
             return false;
@@ -59,14 +59,14 @@ public interface TableMapSaveDao extends TableMapDao {
      * 插入数据之前
      * @param mapValues 插入的数据
      */
-    void beforeInsert(@NonNull final Map<String, Object> mapValues);
+    void beforeInsert( final Map<String, Object> mapValues);
 
     /**
      * 更新数据之前
      * @param mapValues 要更新的数据
      * @param oldMap 之前的数据
      */
-    default void beforeUpdate(@NonNull final Map<String, Object> mapValues, @NonNull final Map<String, Object> oldMap) {
+    default void beforeUpdate( final Map<String, Object> mapValues,  final Map<String, Object> oldMap) {
         mapValues.put(getPrimaryKey(), oldMap.get(getPrimaryKey()));
     }
 }

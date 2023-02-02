@@ -1,6 +1,5 @@
 package hos.utils;
 
-import androidx.annotation.Keep;
 
 import java.io.Closeable;
 import java.io.Flushable;
@@ -14,7 +13,6 @@ import java.io.Flushable;
  * @version : 1.0
  * @date : 2019/12/27 17:33
  */
-@Keep
 public class CloseUtils {
 
     public static void closeQuietly(Closeable... closeable) {

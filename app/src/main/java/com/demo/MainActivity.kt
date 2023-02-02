@@ -31,7 +31,7 @@ class MainActivity: AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         // 配置数据库
         DatabaseManger.setConfig(DatabaseConfig.newBuilder()
-                .setSqLiteDatabase(mDatabaseHelper.writableDatabase)
+                .database(mDatabaseHelper.writableDatabase)
                 .build())
         // 监听
         mBtnInsert.setOnClickListener {

@@ -5,14 +5,12 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 
 import hos.sqlite.datebase.ConflictAlgorithm;
 import hos.sqlite.datebase.SqlBuilder;
 import hos.sqlite.exception.SQLNullException;
 import hos.sqlite.statement.SQLiteDatabase;
+import hos.utils.SqliteLog;
 
 import java.io.File;
 
@@ -29,9 +27,24 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
 
     private android.database.sqlite.SQLiteDatabase mSqLiteDatabase;
 
-    @NonNull
-    SQLiteDatabase openOrCreateDatabase(@NonNull final File file,
-                                        @Nullable final android.database.sqlite.SQLiteDatabase.CursorFactory factory) throws SQLNullException {
+    private SQLAndroidDatabase() {
+    }
+
+    static SQLAndroidDatabase create() {
+        return new SQLAndroidDatabase();
+    }
+
+    static SQLiteDatabase open(final File file,
+                               final android.database.sqlite.SQLiteDatabase.CursorFactory factory) throws SQLNullException {
+        return SQLAndroidDatabase.create().openOrCreateDatabase(file, factory);
+    }
+
+    static SQLiteDatabase open(android.database.sqlite.SQLiteDatabase database) throws SQLNullException {
+        return SQLAndroidDatabase.create().openOrCreateDatabase(database);
+    }
+
+    SQLiteDatabase openOrCreateDatabase(final File file,
+                                        final android.database.sqlite.SQLiteDatabase.CursorFactory factory) throws SQLNullException {
         if (!file.exists()) {
             try {
                 boolean newFile = file.createNewFile();
@@ -45,14 +58,14 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
         try {
             mSqLiteDatabase = android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(file, factory);
         } catch (Exception e) {
-            Log.e("SQLiteDatabase", "数据库打开异常：" + "\n" + file.getAbsolutePath() + "\t\t找不到文件\n" + e.getMessage());
+            SqliteLog.e("数据库打开异常：" + "\n" + file.getAbsolutePath() + "\t\t找不到文件\n" + e.getMessage());
             throw new SQLNullException("Database File create Failed " + file.getAbsolutePath(), e);
         }
-        Log.i("SQLiteDatabase", "getConnection successful .");
+        SqliteLog.d("getConnection successful .");
         return this;
     }
 
-    @NonNull
+
     SQLiteDatabase openOrCreateDatabase(android.database.sqlite.SQLiteDatabase database) {
         mSqLiteDatabase = database;
         return this;
@@ -88,94 +101,100 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
     }
 
     @Override
-    public boolean execSQL(@NonNull String sql) {
+    public boolean execSQL(String sql) {
         try {
+            SqliteLog.d(sql);
             mSqLiteDatabase.execSQL(sql);
             return true;
         } catch (SQLException e) {
-            Log.e("database", "Error execSQL " + sql, e);
+            SqliteLog.e("Error execSQL " + sql, e);
         }
         return false;
     }
 
     @Override
-    public boolean execSQL(@NonNull String sql, @NonNull final Object[] bindArgs) {
-        SqlBuilder execSQL = new SqlBuilder().sql(sql, null).whereArgs(bindArgs);
+    public boolean execSQL(String sql, final Object[] bindArgs) {
+        SqlBuilder sqlBuilder = new SqlBuilder().sql(sql, null).whereArgs(bindArgs);
         try {
+            SqliteLog.d(sqlBuilder.toString());
             mSqLiteDatabase.execSQL(sql, bindArgs);
             return true;
         } catch (SQLException e) {
-            Log.e("database", "Error execSQL " + execSQL.toString(), e);
+            SqliteLog.e("Error execSQL " + sqlBuilder.toString(), e);
             return false;
         }
     }
 
-    @Nullable
+
     @Override
-    public Cursor rawQueryCursor(@NonNull String sql, @Nullable Object[] selectionArgs) {
-        SqlBuilder rawQueryCursor = new SqlBuilder().sql(sql, null).whereArgs(selectionArgs);
+    public Cursor rawQueryCursor(String sql, Object[] selectionArgs) {
+        SqlBuilder sqlBuilder = new SqlBuilder().sql(sql, null).whereArgs(selectionArgs);
         try {
-            return mSqLiteDatabase.rawQuery(sql, rawQueryCursor.whereArgs);
+            SqliteLog.d(sqlBuilder.toString());
+            return mSqLiteDatabase.rawQuery(sql, sqlBuilder.whereArgs);
         } catch (SQLException e) {
-            Log.e("database", "Error rawQueryCursor " + rawQueryCursor.toString(), e);
+            SqliteLog.e("Error rawQueryCursor " + sqlBuilder.toString(), e);
             return null;
         }
     }
 
     @Override
-    public long insert(@NonNull String table, @Nullable final String nullColumnHack, @NonNull ContentValues values,
+    public long insert(String table, final String nullColumnHack, ContentValues values,
                        ConflictAlgorithm conflictAlgorithm) {
-        SqlBuilder insert = new SqlBuilder().conflictAlgorithm(conflictAlgorithm)
+        SqlBuilder sqlBuilder = new SqlBuilder().conflictAlgorithm(conflictAlgorithm)
                 .insert(table, values, nullColumnHack, conflictAlgorithm);
         try {
+            SqliteLog.d(sqlBuilder.toString());
             final long count;
-            if ((count = mSqLiteDatabase.insertWithOnConflict(table, nullColumnHack, values, insert.conflictIndex)) <
+            if ((count = mSqLiteDatabase.insertWithOnConflict(table, nullColumnHack, values, sqlBuilder.conflictIndex)) <
                     0) {
-                Log.w("database", "插入数据出错 " + insert.toString());
+                SqliteLog.e( "插入数据出错 " + sqlBuilder.toString());
             }
             return count;
         } catch (SQLException e) {
-            Log.e("database", "Error insert " + insert.toString(), e);
+            SqliteLog.e("Error insert " + sqlBuilder.toString(), e);
             return -1;
         }
     }
 
     @Override
-    public int update(@NonNull String table, @NonNull ContentValues values, @NonNull String whereClause,
-                      @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
-        SqlBuilder update = new SqlBuilder().conflictAlgorithm(conflictAlgorithm)
+    public int update(String table, ContentValues values, String whereClause,
+                      final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+        SqlBuilder sqlBuilder = new SqlBuilder().conflictAlgorithm(conflictAlgorithm)
                 .update(table, values, whereClause, whereArgs, conflictAlgorithm);
         try {
+            SqliteLog.d(sqlBuilder.toString());
             final int count;
             if ((count = mSqLiteDatabase
-                    .updateWithOnConflict(table, values, whereClause, update.whereArgs, update.conflictIndex)) < 0) {
-                Log.w("database", "更新数据出错 " + update.toString());
+                    .updateWithOnConflict(table, values, whereClause, sqlBuilder.whereArgs, sqlBuilder.conflictIndex)) < 0) {
+                SqliteLog.e( "插入数据出错 " + sqlBuilder.toString());
             }
             return count;
         } catch (SQLException e) {
-            Log.e("database", "Error update " + update.toString(), e);
+            SqliteLog.e("Error update " + sqlBuilder.toString(), e);
             return -1;
         }
     }
 
     @Override
-    public int delete(@NonNull String table, @Nullable String whereClause, @Nullable final Object[] whereArgs) {
-        SqlBuilder delete = new SqlBuilder().delete(table, whereClause, whereArgs);
+    public int delete(String table, String whereClause, final Object[] whereArgs) {
+        SqlBuilder sqlBuilder = new SqlBuilder().delete(table, whereClause, whereArgs);
         try {
+            SqliteLog.d(sqlBuilder.toString());
             final int count;
-            if ((count = mSqLiteDatabase.delete(table, whereClause, delete.whereArgs)) < 0) {
-                Log.w("database", "删除数据出错 " + delete.toString());
+            if ((count = mSqLiteDatabase.delete(table, whereClause, sqlBuilder.whereArgs)) < 0) {
+                SqliteLog.e( "插入数据出错 " + sqlBuilder.toString());
             }
             return count;
         } catch (SQLException e) {
-            Log.e("database", "Error delete " + delete.toString(), e);
+            SqliteLog.e("Error delete " + sqlBuilder.toString(), e);
             return -1;
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    protected SQLAndroidStatement compileStatement(@NonNull String sql) {
+    protected SQLAndroidStatement compileStatement(String sql) {
         return SQLAndroidStatement.createStatement(mSqLiteDatabase, sql);
     }
 
@@ -184,7 +203,7 @@ final class SQLAndroidDatabase extends SQLiteDatabase {
         mSqLiteDatabase.close();
     }
 
-    @NonNull
+
     @Override
     public String getPath() {
         return mSqLiteDatabase.getPath();

@@ -3,8 +3,8 @@ package hos.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+
 
 import hos.sqlite.datebase.ConflictAlgorithm;
 import hos.sqlite.datebase.SqlBuilder;
@@ -27,123 +27,121 @@ import java.util.Map;
  */
 public interface SQLiteExecutor {
 
-    boolean execSQL(@NonNull final String sql);
+    boolean execSQL( final String sql);
 
-    boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs);
+    boolean execSQL( final String sql,  final Object[] bindArgs);
 
-
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @Nullable final String[] columns,
-                                            @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
-                                            @Nullable final String having, @Nullable final String orderBy) {
+    default List<Map<String, Object>> query( final String table,  final String[] columns,
+                                             final String where,  final Object[] whereArgs,  final String groupBy,
+                                             final String having,  final String orderBy) {
         return query(table, false, columns, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default List<Map<String, Object>> queryAll(@NonNull final String table) {
+    
+    default List<Map<String, Object>> queryAll( final String table) {
         return query(table, false, null, "", new String[]{}, null, null, null, null, null);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @Nullable final String[] columns,
-                                            @NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default List<Map<String, Object>> query( final String table,  final String[] columns,
+                                             final String where,  final Object[] whereArgs) {
         return query(table, false, columns, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                            @Nullable final String orderBy) {
+    
+    default List<Map<String, Object>> query( final String table,  final String where,
+                                             final Object[] whereArgs,  final String groupBy,  final String having,
+                                             final String orderBy) {
         return query(table, false, null, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs) {
+    
+    default List<Map<String, Object>> query( final String table,  final String where,
+                                             final Object[] whereArgs) {
         return query(table, false, null, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query( final String table,  final String where,
+                                             final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         return query(table, false, null, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, @Nullable final String[] columns,
-                                            @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final Integer limit,
-                                            @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query( final String table,  final String[] columns,
+                                             final String where,  final Object[] whereArgs,  final Integer limit,
+                                             final Integer offset) {
         return query(table, false, columns, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @Nullable final String[] columns,
-                                           @NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String[] columns,
+                                            final String where,  final Object[] whereArgs) {
         return queryFirst(table, false, columns, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @Nullable final String[] columns,
-                                           @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
-                                           @Nullable final String having, @Nullable final String orderBy) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String[] columns,
+                                            final String where,  final Object[] whereArgs,  final String groupBy,
+                                            final String having,  final String orderBy) {
         return queryFirst(table, false, columns, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String where,
+                                            final Object[] whereArgs) {
         return queryFirst(table, false, null, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                           @Nullable final String orderBy) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String where,
+                                            final Object[] whereArgs,  final String groupBy,  final String having,
+                                            final String orderBy) {
         return queryFirst(table, false, null, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String where,
+                                            final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         return queryFirst(table, false, null, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, @Nullable final String[] columns,
-                                           @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final Integer limit,
-                                           @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst( final String table,  final String[] columns,
+                                            final String where,  final Object[] whereArgs,  final Integer limit,
+                                            final Integer offset) {
         return queryFirst(table, false, columns, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String table, final boolean distinct,
-                                            @Nullable final String[] columns, @NonNull final String where, @NonNull final Object[] whereArgs,
-                                            @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy,
-                                            @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query( final String table, final boolean distinct,
+                                             final String[] columns,  final String where,  final Object[] whereArgs,
+                                             final String groupBy,  final String having,  final String orderBy,
+                                             final Integer limit,  final Integer offset) {
         final SqlBuilder sqlBuilder = new SqlBuilder()
                 .query(table, distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset);
         return rawQuery(sqlBuilder.sql, sqlBuilder.whereArgs);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String table, final boolean distinct,
-                                           @Nullable final String[] columns, @NonNull final String where, @NonNull final Object[] whereArgs,
-                                           @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy,
-                                           @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst( final String table, final boolean distinct,
+                                            final String[] columns,  final String where,  final Object[] whereArgs,
+                                            final String groupBy,  final String having,  final String orderBy,
+                                            final Integer limit,  final Integer offset) {
         final SqlBuilder sqlBuilder = new SqlBuilder()
                 .query(table, distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset);
         return rawQueryFirst(sqlBuilder.sql, sqlBuilder.whereArgs);
     }
 
-    @Nullable
-    default Map<String, Object> rawQueryFirst(@NonNull final String sql, @Nullable final Object[] arguments) {
+    
+    default Map<String, Object> rawQueryFirst( final String sql,  final Object[] arguments) {
         final SqlBuilder sqlBuilder = new SqlBuilder().sql(sql, arguments);
         final Cursor cursor = rawQueryCursor(sql, arguments);
         if (cursor == null) {
             return null;
         }
         try {
-            @NonNull final Map<String, Object> map = new HashMap<>();
+             final Map<String, Object> map = new HashMap<>();
             if (cursor.moveToNext()) {
                 int columnCount = cursor.getColumnCount();
                 for (int j = 0; j < columnCount; j++) {
@@ -156,17 +154,17 @@ public interface SQLiteExecutor {
         }
     }
 
-    @Nullable
-    default List<Map<String, Object>> rawQuery(@NonNull final String sql, @Nullable final Object[] arguments) {
+    
+    default List<Map<String, Object>> rawQuery( final String sql,  final Object[] arguments) {
         final Cursor cursor = rawQueryCursor(sql, arguments);
         if (cursor == null) {
             return null;
         }
         try {
             final SqlBuilder sqlBuilder = new SqlBuilder();
-            @NonNull final List<Map<String, Object>> resultList = new ArrayList<>();
+             final List<Map<String, Object>> resultList = new ArrayList<>();
             while (cursor.moveToNext()) {
-                @NonNull final Map<String, Object> map = new HashMap<>();
+                 final Map<String, Object> map = new HashMap<>();
                 int columnCount = cursor.getColumnCount();
                 for (int j = 0; j < columnCount; j++) {
                     map.put(cursor.getColumnName(j), sqlBuilder.getValue(cursor, j));
@@ -179,134 +177,134 @@ public interface SQLiteExecutor {
         }
     }
 
-    @Nullable
-    default Cursor queryCursorAll(@NonNull final String table) {
+    
+    default Cursor queryCursorAll( final String table) {
         return queryCursor(table, false, null, "", new String[]{}, null, null, null, null, null);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @Nullable final String[] columns,
-                               @NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default Cursor queryCursor( final String table,  final String[] columns,
+                                final String where,  final Object[] whereArgs) {
         return queryCursor(table, false, columns, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @NonNull final String where,
-                               @NonNull final Object[] whereArgs) {
+    
+    default Cursor queryCursor( final String table,  final String where,
+                                final Object[] whereArgs) {
         return queryCursor(table, false, null, where, whereArgs, null, null, null, null, null);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                               @Nullable final String orderBy) {
+    
+    default Cursor queryCursor( final String table,  final String where,
+                                final Object[] whereArgs,  final String groupBy,  final String having,
+                                final String orderBy) {
         return queryCursor(table, false, null, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @Nullable final String[] columns,
-                               @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
-                               @Nullable final String having, @Nullable final String orderBy) {
+    
+    default Cursor queryCursor( final String table,  final String[] columns,
+                                final String where,  final Object[] whereArgs,  final String groupBy,
+                                final String having,  final String orderBy) {
         return queryCursor(table, false, columns, where, whereArgs, groupBy, having, orderBy, null, null);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Cursor queryCursor( final String table,  final String where,
+                                final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         return queryCursor(table, false, null, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, @Nullable final String[] columns,
-                               @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final Integer limit,
-                               @Nullable final Integer offset) {
+    
+    default Cursor queryCursor( final String table,  final String[] columns,
+                                final String where,  final Object[] whereArgs,  final Integer limit,
+                                final Integer offset) {
         return queryCursor(table, false, columns, where, whereArgs, null, null, null, limit, offset);
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String table, final boolean distinct, @Nullable final String[] columns,
-                               @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
-                               @Nullable final String having, @Nullable final String orderBy, @Nullable final Integer limit,
-                               @Nullable final Integer offset) {
+    
+    default Cursor queryCursor( final String table, final boolean distinct,  final String[] columns,
+                                final String where,  final Object[] whereArgs,  final String groupBy,
+                                final String having,  final String orderBy,  final Integer limit,
+                                final Integer offset) {
         final SqlBuilder sqlBuilder = new SqlBuilder()
                 .query(table, distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset);
         return rawQueryCursor(sqlBuilder.sql, sqlBuilder.whereArgs);
     }
 
-    @Nullable
-    Cursor rawQueryCursor(@NonNull final String sql, @Nullable final Object[] selectionArgs);
+    
+    Cursor rawQueryCursor( final String sql,  final Object[] selectionArgs);
 
-    int update(@NonNull final String table, @NonNull final ContentValues values, @NonNull final String whereClause,
-               @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+    int update( final String table,  final ContentValues values,  final String whereClause,
+                final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default int update(@NonNull final String table, @NonNull final ContentValues values,
-                       @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+    default int update( final String table,  final ContentValues values,
+                        final String whereClause,  final Object[] whereArgs) {
         return update(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    long update(@NonNull final String table, @NonNull final Map<String, Object> values,
-                @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+    long update( final String table,  final Map<String, Object> values,
+                 final String whereClause,  final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default long update(@NonNull final String table, @NonNull final Map<String, Object> values,
-                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+    default long update( final String table,  final Map<String, Object> values,
+                         final String whereClause,  final Object[] whereArgs) {
         return update(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    long transactionUpdateValue(@NonNull final String table, @NonNull final List<ContentValues> values, @NonNull final String whereClause,
-                                @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+    long transactionUpdateValue( final String table,  final List<ContentValues> values,  final String whereClause,
+                                 final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default long transactionUpdateValue(@NonNull final String table, @NonNull final List<ContentValues> values,
-                                        @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+    default long transactionUpdateValue( final String table,  final List<ContentValues> values,
+                                         final String whereClause,  final Object[] whereArgs) {
         return transactionUpdateValue(table, values, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    long transactionUpdate(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
-                           @NonNull final String whereClause, @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
+    long transactionUpdate( final String table,  final List<Map<String, Object>> valueList,
+                            final String whereClause,  final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm);
 
-    default long transactionUpdate(@NonNull final String table, @NonNull final List<Map<String, Object>> valueList,
-                                   @NonNull final String whereClause, @Nullable final Object[] whereArgs) {
+    default long transactionUpdate( final String table,  final List<Map<String, Object>> valueList,
+                                    final String whereClause,  final Object[] whereArgs) {
         return transactionUpdate(table, valueList, whereClause, whereArgs, ConflictAlgorithm.none);
     }
 
-    long rawUpdate(@NonNull final String sql, @Nullable final Object[] whereArgs);
+    long rawUpdate( final String sql,  final Object[] whereArgs);
 
-    int delete(@NonNull final String table, @Nullable final String whereClause, @Nullable final Object[] whereArgs);
+    int delete( final String table,  final String whereClause,  final Object[] whereArgs);
 
-    long rawDelete(@NonNull final String sql, @Nullable final Object[] whereArgs);
+    long rawDelete( final String sql,  final Object[] whereArgs);
 
-    long insert(@NonNull final String table, @Nullable final String nullColumnHack, @NonNull final ContentValues values,
+    long insert( final String table,  final String nullColumnHack,  final ContentValues values,
                 ConflictAlgorithm conflictAlgorithm);
 
-    default long insert(@NonNull final String table, @Nullable final String nullColumnHack,
-                        @NonNull final ContentValues values) {
+    default long insert( final String table,  final String nullColumnHack,
+                         final ContentValues values) {
         return insert(table, nullColumnHack, values, ConflictAlgorithm.none);
     }
 
 
-    long transactionInsertValue(@NonNull final String table, @Nullable final String nullColumnHack, @NonNull final List<ContentValues> values,
+    long transactionInsertValue( final String table,  final String nullColumnHack,  final List<ContentValues> values,
                                 ConflictAlgorithm conflictAlgorithm);
 
-    default long transactionInsertValue(@NonNull final String table, @Nullable final String nullColumnHack,
-                                        @NonNull final List<ContentValues> values) {
+    default long transactionInsertValue( final String table,  final String nullColumnHack,
+                                         final List<ContentValues> values) {
         return transactionInsertValue(table, nullColumnHack, values, ConflictAlgorithm.none);
     }
 
-    long insert(@NonNull final String table, @Nullable final String nullColumnHack,
-                @NonNull final Map<String, Object> values, ConflictAlgorithm conflictAlgorithm);
+    long insert( final String table,  final String nullColumnHack,
+                 final Map<String, Object> values, ConflictAlgorithm conflictAlgorithm);
 
-    default long insert(@NonNull final String table, @Nullable final String nullColumnHack,
-                        @NonNull final Map<String, Object> values) {
+    default long insert( final String table,  final String nullColumnHack,
+                         final Map<String, Object> values) {
         return insert(table, nullColumnHack, values, ConflictAlgorithm.none);
     }
 
-    long transactionInsert(@NonNull final String table, @Nullable final String nullColumnHack,
-                           @NonNull final List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm);
+    long transactionInsert( final String table,  final String nullColumnHack,
+                            final List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm);
 
-    default long transactionInsert(@NonNull final String table, @Nullable final String nullColumnHack,
-                                   @NonNull final List<Map<String, Object>> valueList) {
+    default long transactionInsert( final String table,  final String nullColumnHack,
+                                    final List<Map<String, Object>> valueList) {
         return transactionInsert(table, nullColumnHack, valueList, ConflictAlgorithm.none);
     }
 
-    long rawInsert(@NonNull final String sql, @Nullable final Object[] whereArgs);
+    long rawInsert( final String sql,  final Object[] whereArgs);
 
 }

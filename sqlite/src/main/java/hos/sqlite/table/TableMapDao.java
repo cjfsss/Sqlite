@@ -2,8 +2,8 @@ package hos.sqlite.table;
 
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+
+
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface TableMapDao extends DatabaseDao {
      * 表名
      * @return 表名
      */
-    @NonNull
+    
     String getTableName();
 
     /**
@@ -33,14 +33,14 @@ public interface TableMapDao extends DatabaseDao {
      *
      * @return 主键
      */
-    @NonNull
+    
     String getPrimaryKey();
 
     /**
      * 获取创建表语句
      * @return 创建表语句
      */
-    @NonNull
+    
     default String getCreateTableSql() {
         return "CREATE TABLE IF NOT EXISTS '" + getTableName() + "' ";
     }
@@ -48,7 +48,7 @@ public interface TableMapDao extends DatabaseDao {
     /**
      * 主键
      */
-    @NonNull
+    
     default String getCreateTablePrimaryKeySql() {
         return " '" + getPrimaryKey() + "' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ";
     }
@@ -66,7 +66,7 @@ public interface TableMapDao extends DatabaseDao {
      * @param createTableSql 创建sql
      * @param createTablePrimaryKeySql 主键sql
      */
-    void createTable(@NonNull final String createTableSql, @NonNull final String createTablePrimaryKeySql);
+    void createTable( final String createTableSql,  final String createTablePrimaryKeySql);
 
     /**
      * 检查表是否存在，不存在则创建
@@ -81,7 +81,7 @@ public interface TableMapDao extends DatabaseDao {
      * 获取表的创建语句
      * @return 表的创建语句
      */
-    @Nullable
+    
     default String getCreateSqlForMaster() {
         checkTableExist();
         return getDatabase().getCreateSqlForMaster(getTableName());
@@ -92,7 +92,7 @@ public interface TableMapDao extends DatabaseDao {
      * @param sql 需要执行的语句
      * @return true 执行成功
      */
-    default boolean execute(@NonNull String sql) {
+    default boolean execute( String sql) {
         checkTableExist();
         return getDatabase().execSQL(sql);
     }
@@ -102,7 +102,7 @@ public interface TableMapDao extends DatabaseDao {
      * @param arguments 条件
      * @return true 成功
      */
-    default boolean execute(@NonNull final String sql, @NonNull final Object[] arguments) {
+    default boolean execute( final String sql,  final Object[] arguments) {
         checkTableExist();
         return getDatabase().execSQL(sql, arguments);
     }
@@ -112,26 +112,26 @@ public interface TableMapDao extends DatabaseDao {
      * @param primaryKeyValue 主键条件
      * @return 查询结果
      */
-    @Nullable
-    default Map<String, Object> queryFirstByPrimaryKey(@NonNull final Object primaryKeyValue) {
+    
+    default Map<String, Object> queryFirstByPrimaryKey( final Object primaryKeyValue) {
         checkTableExist();
         return getDatabase().queryFirstByPrimaryKey(getTableName(), getPrimaryKey(), primaryKeyValue);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(boolean distinct, @Nullable final String[] columns,
-                                            @NonNull final String where, @NonNull final Object[] whereArgs, @Nullable final String groupBy,
-                                            @Nullable final String having, @Nullable final String orderBy, @Nullable final Integer limit,
-                                            @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query(boolean distinct,  final String[] columns,
+                                             final String where,  final Object[] whereArgs,  final String groupBy,
+                                             final String having,  final String orderBy,  final Integer limit,
+                                             final Integer offset) {
         checkTableExist();
         return getDatabase()
                 .query(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit, offset);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(boolean distinct, @Nullable final String[] columns, String where,
-                                           Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                           @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst(boolean distinct,  final String[] columns, String where,
+                                           Object[] whereArgs,  final String groupBy,  final String having,
+                                            final String orderBy,  final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase()
                 .queryFirst(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit,
@@ -142,183 +142,183 @@ public interface TableMapDao extends DatabaseDao {
      * 查询全部
      * @return 查询结果
      */
-    @Nullable
+    
     default List<Map<String, Object>> queryAll() {
         checkTableExist();
         return getDatabase().queryAll(getTableName());
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs) {
+    
+    default List<Map<String, Object>> query( final String[] columns,  final String where,
+                                             final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().query(getTableName(), columns, where, whereArgs);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                            @Nullable final String orderBy) {
+    
+    default List<Map<String, Object>> query( final String[] columns,  final String where,
+                                             final Object[] whereArgs,  final String groupBy,  final String having,
+                                             final String orderBy) {
         checkTableExist();
         return getDatabase().query(getTableName(), columns, where, whereArgs, groupBy, having, orderBy);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default List<Map<String, Object>> query( final String where,  final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().query(getTableName(), where, whereArgs);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                            @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
+    
+    default List<Map<String, Object>> query( final String where,  final Object[] whereArgs,
+                                             final String groupBy,  final String having,  final String orderBy) {
         checkTableExist();
         return getDatabase().query(getTableName(), where, whereArgs, groupBy, having, orderBy);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                            @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query( final String where,  final Object[] whereArgs,
+                                             final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().query(getTableName(), where, whereArgs, limit, offset);
     }
 
-    @Nullable
-    default List<Map<String, Object>> query(@Nullable final String[] columns, @NonNull final String where,
-                                            @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default List<Map<String, Object>> query( final String[] columns,  final String where,
+                                             final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().query(getTableName(), columns, where, whereArgs, limit, offset);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs) {
+    
+    default Map<String, Object> queryFirst( final String[] columns,  final String where,
+                                            final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), columns, where, whereArgs);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                                           @Nullable final String orderBy) {
+    
+    default Map<String, Object> queryFirst( final String[] columns,  final String where,
+                                            final Object[] whereArgs,  final String groupBy,  final String having,
+                                            final String orderBy) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), columns, where, whereArgs, groupBy, having, orderBy);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default Map<String, Object> queryFirst( final String where,  final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), where, whereArgs);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                           @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
+    
+    default Map<String, Object> queryFirst( final String where,  final Object[] whereArgs,
+                                            final String groupBy,  final String having,  final String orderBy) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), where, whereArgs, groupBy, having, orderBy);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@NonNull final String where, @NonNull final Object[] whereArgs,
-                                           @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst( final String where,  final Object[] whereArgs,
+                                            final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), where, whereArgs, limit, offset);
     }
 
-    @Nullable
-    default Map<String, Object> queryFirst(@Nullable final String[] columns, @NonNull final String where,
-                                           @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    
+    default Map<String, Object> queryFirst( final String[] columns,  final String where,
+                                            final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().queryFirst(getTableName(), columns, where, whereArgs, limit, offset);
     }
 
-    @Nullable
+    
     default Cursor queryCursorAll() {
         checkTableExist();
         return getDatabase().queryCursorAll(getTableName());
     }
 
-    @Nullable
-    default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs) {
+    
+    default Cursor queryCursor( final String where,  final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), where, whereArgs);
     }
 
-    default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs) {
+    default Cursor queryCursor( final String[] columns,  final String where,
+                                final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), columns, where, whereArgs);
     }
 
-    default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs,
-                               @Nullable final String groupBy, @Nullable final String having, @Nullable final String orderBy) {
+    default Cursor queryCursor( final String where,  final Object[] whereArgs,
+                                final String groupBy,  final String having,  final String orderBy) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), where, whereArgs, groupBy, having, orderBy);
     }
 
-    default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                               @Nullable final String orderBy) {
+    default Cursor queryCursor( final String[] columns,  final String where,
+                                final Object[] whereArgs,  final String groupBy,  final String having,
+                                final String orderBy) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), columns, where, whereArgs, groupBy, having, orderBy);
     }
 
-    default Cursor queryCursor(@NonNull final String where, @NonNull final Object[] whereArgs,
-                               @Nullable final Integer limit, @Nullable final Integer offset) {
+    default Cursor queryCursor( final String where,  final Object[] whereArgs,
+                                final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), where, whereArgs, limit, offset);
     }
 
-    default Cursor queryCursor(@Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final Integer limit, @Nullable final Integer offset) {
+    default Cursor queryCursor( final String[] columns,  final String where,
+                                final Object[] whereArgs,  final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase().queryCursor(getTableName(), columns, where, whereArgs, limit, offset);
     }
 
-    default Cursor queryCursor(boolean distinct, @Nullable final String[] columns, @NonNull final String where,
-                               @NonNull final Object[] whereArgs, @Nullable final String groupBy, @Nullable final String having,
-                               @Nullable final String orderBy, @Nullable final Integer limit, @Nullable final Integer offset) {
+    default Cursor queryCursor(boolean distinct,  final String[] columns,  final String where,
+                                final Object[] whereArgs,  final String groupBy,  final String having,
+                                final String orderBy,  final Integer limit,  final Integer offset) {
         checkTableExist();
         return getDatabase()
                 .queryCursor(getTableName(), distinct, columns, where, whereArgs, groupBy, having, orderBy, limit,
                         offset);
     }
 
-    default long insert(@NonNull final List<Map<String, Object>> values,
-                        @NonNull final ConflictAlgorithm conflictAlgorithm) {
+    default long insert( final List<Map<String, Object>> values,
+                         final ConflictAlgorithm conflictAlgorithm) {
         checkTableExist();
         return getDatabase().transactionInsert(getTableName(), null, values, conflictAlgorithm);
     }
 
-    default long insert(@NonNull final Map<String, Object> values, @NonNull final ConflictAlgorithm conflictAlgorithm) {
+    default long insert( final Map<String, Object> values,  final ConflictAlgorithm conflictAlgorithm) {
         checkTableExist();
         return getDatabase().insert(getTableName(), null, values, conflictAlgorithm);
     }
 
-    default long insert(@NonNull final List<Map<String, Object>> values) {
+    default long insert( final List<Map<String, Object>> values) {
         checkTableExist();
         return getDatabase().transactionInsert(getTableName(), null, values);
     }
 
 
-    default long insert(@NonNull final Map<String, Object> values) {
+    default long insert( final Map<String, Object> values) {
         checkTableExist();
         return getDatabase().insert(getTableName(), null, values);
     }
 
-    default long update(@NonNull final Map<String, Object> values, @NonNull final String where,
-                        @NonNull final Object[] whereArgs, @NonNull final ConflictAlgorithm conflictAlgorithm) {
+    default long update( final Map<String, Object> values,  final String where,
+                         final Object[] whereArgs,  final ConflictAlgorithm conflictAlgorithm) {
         checkTableExist();
         return getDatabase().update(getTableName(), values, where, whereArgs, conflictAlgorithm);
     }
 
-    default long update(@NonNull final Map<String, Object> values, @NonNull final String where,
-                        @NonNull final Object[] whereArgs) {
+    default long update( final Map<String, Object> values,  final String where,
+                         final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().update(getTableName(), values, where, whereArgs);
     }
 
-    default long delete(@NonNull final String where, @NonNull final Object[] whereArgs) {
+    default long delete( final String where,  final Object[] whereArgs) {
         checkTableExist();
         return getDatabase().delete(getTableName(), where, whereArgs);
     }
@@ -337,7 +337,7 @@ public interface TableMapDao extends DatabaseDao {
      * @param whereIn 删除条件
      * @return true 删除成功
      */
-    default boolean deleteByPrimaryKey(@NonNull final Object[] whereIn) {
+    default boolean deleteByPrimaryKey( final Object[] whereIn) {
         checkTableExist();
         return getDatabase().deleteByPrimaryKey(getTableName(), getPrimaryKey(), whereIn);
     }
@@ -346,7 +346,7 @@ public interface TableMapDao extends DatabaseDao {
      * @param primaryKeyValue 删除条件
      * @return 删除条数
      */
-    default long deleteByPrimaryKey(@NonNull final Object primaryKeyValue) {
+    default long deleteByPrimaryKey( final Object primaryKeyValue) {
         checkTableExist();
         return getDatabase().deleteByPrimaryKey(getTableName(), getPrimaryKey(), primaryKeyValue);
     }

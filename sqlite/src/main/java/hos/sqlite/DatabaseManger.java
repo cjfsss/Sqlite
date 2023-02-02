@@ -1,15 +1,16 @@
 package hos.sqlite;
 
+import android.content.Context;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import java.io.File;
 
 import hos.sqlite.datebase.Database;
+import hos.sqlite.exception.SQLArgumentException;
 import hos.sqlite.exception.SQLNullException;
 import hos.sqlite.statement.SQLiteDatabase;
+import hos.utils.SqliteLog;
 
 /**
  * <p>Title: DatabaseManger </p>
@@ -37,16 +38,13 @@ public class DatabaseManger {
             synchronized (DatabaseConfig.class) {
                 if (sConfig == null)
                     sConfig = config == null ? DatabaseConfig.newBuilder().build() : config;
-                else Log.w("Kalle", new IllegalStateException("Only allowed to configure once."));
+                else {
+                    SqliteLog.w(new IllegalStateException("Only allowed to configure once."));
+                }
             }
         }
     }
 
-    /**
-     * 获取sql查询的管理类
-     *
-     * @return
-     */
     public static SQLiteDatabase getSqLiteDatabase() {
         return sConfig.getSqLiteDatabase();
     }
@@ -55,12 +53,32 @@ public class DatabaseManger {
         return sConfig.getDatabase();
     }
 
-    public static SQLiteDatabase newConnection(@NonNull final File file,
-                                               @Nullable final android.database.sqlite.SQLiteDatabase.CursorFactory factory) throws SQLNullException {
-        return new SQLAndroidDatabase().openOrCreateDatabase(file, factory);
+    public static SQLiteDatabase open(final Context context,
+                                      final File file) throws SQLNullException {
+        if (file == null) {
+            // 文件不存在
+            throw new SQLArgumentException(" DatabasePath create error ");
+        }
+        return DatabaseManger.open(context, file.getAbsolutePath());
     }
 
-    public static SQLiteDatabase connection(@NonNull final android.database.sqlite.SQLiteDatabase database) throws SQLNullException {
-        return new SQLAndroidDatabase().openOrCreateDatabase(database);
+    public static SQLiteDatabase open(final Context context,
+                                      final String path) throws SQLNullException {
+        boolean orExistsDir = FileUtils.isFileExists(context, path);
+        if (!orExistsDir) {
+            // 文件不存在
+            throw new SQLArgumentException(" DatabasePath create error ");
+        }
+        // 文件创建成功
+        return SQLAndroidDatabase.open(FileUtils.getFileByPath(path), null);
+    }
+
+    public static SQLiteDatabase open(final File file,
+                                      final android.database.sqlite.SQLiteDatabase.CursorFactory factory) throws SQLNullException {
+        return SQLAndroidDatabase.open(file, factory);
+    }
+
+    public static SQLiteDatabase open(final android.database.sqlite.SQLiteDatabase database) throws SQLNullException {
+        return SQLAndroidDatabase.open(database);
     }
 }

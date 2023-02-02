@@ -3,8 +3,6 @@ package hos.sqlite;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import hos.sqlite.datebase.ConflictAlgorithm;
 import hos.sqlite.datebase.Database;
@@ -26,15 +24,15 @@ import java.util.Map;
  */
 final class DatabaseImpl implements Database {
 
-    @NonNull
+
     @Override
     public SQLiteDatabase getConnection() {
         return DatabaseManger.getSqLiteDatabase();
     }
 
     @Override
-    public boolean tableIsExist(@NonNull String tableName) {
-        @Nullable final Boolean checkedDatabase = this.isCheckedDatabase(tableName);
+    public boolean tableIsExist(String tableName) {
+        final Boolean checkedDatabase = this.isCheckedDatabase(tableName);
         if (checkedDatabase != null && checkedDatabase) {
             return true;
         }
@@ -57,8 +55,8 @@ final class DatabaseImpl implements Database {
         return false;
     }
 
-    @Nullable
-    private Boolean isCheckedDatabase(@NonNull final String tableName) {
+
+    private Boolean isCheckedDatabase(final String tableName) {
         Map<String, Boolean> isDatabaseExitMap = DatabaseManger.getConfig().getIsDatabaseExitMap();
         if (isDatabaseExitMap == null) {
             return false;
@@ -66,7 +64,7 @@ final class DatabaseImpl implements Database {
         return isDatabaseExitMap.get(tableName);
     }
 
-    private void setCheckedDatabase(@NonNull final String tableName, final boolean isExist) {
+    private void setCheckedDatabase(final String tableName, final boolean isExist) {
         Map<String, Boolean> isDatabaseExitMap = DatabaseManger.getConfig().getIsDatabaseExitMap();
         if (isDatabaseExitMap == null) {
             isDatabaseExitMap = new HashMap<>();

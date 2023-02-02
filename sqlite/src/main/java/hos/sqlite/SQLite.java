@@ -1,6 +1,6 @@
 package hos.sqlite;
 
-import androidx.annotation.NonNull;
+
 
 import java.io.Closeable;
 
@@ -19,7 +19,7 @@ public interface SQLite extends Closeable {
     void close();
 
     /// The path of the database
-    @NonNull
+    
     String getPath();
 
     ///

@@ -2,11 +2,6 @@ package hos.sqlite.statement;
 
 import android.content.ContentValues;
 import android.database.SQLException;
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
 
 import java.util.List;
 import java.util.Map;
@@ -14,8 +9,10 @@ import java.util.Map;
 import hos.sqlite.SQLite;
 import hos.sqlite.SQLiteExecutor;
 import hos.sqlite.datebase.ConflictAlgorithm;
+import hos.sqlite.datebase.Function;
 import hos.sqlite.datebase.SqlBuilder;
 import hos.utils.CloseUtils;
+import hos.utils.SqliteLog;
 
 /**
  * <p>Title: SQLiteDatabase </p>
@@ -31,24 +28,25 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
         SQLTransaction {
 
 
-    protected abstract <STATEMENT extends SQLiteStatement<STATEMENT>> SQLiteStatement<STATEMENT> compileStatement(@NonNull final String sql);
+    protected abstract <STATEMENT extends SQLiteStatement<STATEMENT>> SQLiteStatement<STATEMENT> compileStatement(final String sql);
 
     @Override
-    public long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
-                       @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    public long update(String table, Map<String, Object> values, String whereClause,
+                       Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         SqlBuilder update = new SqlBuilder().update(table, values, whereClause, whereArgs, conflictAlgorithm);
         return statement(update.sql, update.arguments, statement -> {
+            SqliteLog.d(statement.toString());
             final long count;
             if ((count = statement.executeUpdateDelete()) < 0) {
-                Log.w("database", "更新数据出错，错误数据是:" + statement.toString());
+                SqliteLog.e("更新数据出错，错误数据是:" + statement.toString());
             }
             return count;
         });
     }
 
     @Override
-    public long transactionUpdate(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
-                                  @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionUpdate(String table, List<Map<String, Object>> valueList, String whereClause,
+                                  Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
@@ -90,11 +88,11 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long transactionUpdateValue(@NonNull String table, @NonNull List<ContentValues> valueList, @NonNull String whereClause, @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionUpdateValue(String table, List<ContentValues> valueList, String whereClause, Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
-                Long updateSize = 0L;
+                long updateSize = 0L;
                 for (ContentValues contentValues : valueList) {
                     updateSize += update(table, contentValues, whereClause, whereArgs, conflictAlgorithm);
                 }
@@ -104,11 +102,12 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
+    public long rawUpdate(String sql, Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
+            SqliteLog.d(statement.toString());
             final long count;
             if ((count = statement.executeUpdateDelete()) < 0) {
-                Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
+                SqliteLog.e("删除数据出错，错误数据是:" + statement.toString());
             }
             return count;
         });
@@ -116,32 +115,34 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
 
 
     @Override
-    public long rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
+    public long rawDelete(String sql, Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
+            SqliteLog.d(statement.toString());
             final long count;
             if ((count = statement.executeUpdateDelete()) < 0) {
-                Log.w("database", "删除数据出错，错误数据是:" + statement.toString());
+                SqliteLog.e("删除数据出错，错误数据是:" + statement.toString());
             }
             return count;
         });
     }
 
     @Override
-    public long insert(@NonNull String table, @Nullable String nullColumnHack, @NonNull Map<String, Object> values,
+    public long insert(String table, String nullColumnHack, Map<String, Object> values,
                        ConflictAlgorithm conflictAlgorithm) {
         SqlBuilder insert = new SqlBuilder().insert(table, values, nullColumnHack, conflictAlgorithm);
         return statement(insert.sql, insert.arguments, statement -> {
+            SqliteLog.d(statement.toString());
             final long count;
             if ((count = statement.executeInsert()) < 0) {
-                Log.w("database", "插入数据出错，错误数据是:" + statement.toString());
+                SqliteLog.e("插入数据出错，错误数据是:" + statement.toString());
             }
             return count;
         });
     }
 
     @Override
-    public long transactionInsert(@NonNull String table, @Nullable String nullColumnHack,
-                                  @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionInsert(String table, String nullColumnHack,
+                                  List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
@@ -184,7 +185,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long transactionInsertValue(@NonNull String table, @Nullable String nullColumnHack, @NonNull List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
+    public long transactionInsertValue(String table, String nullColumnHack, List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
         return transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase input) {
@@ -198,19 +199,20 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long rawInsert(@NonNull String sql, @Nullable Object[] whereArgs) {
+    public long rawInsert(String sql, Object[] whereArgs) {
         return statement(sql, whereArgs, statement -> {
+            SqliteLog.d(statement.toString());
             final long count;
             if ((count = statement.executeInsert()) < 0) {
-                Log.w("database", "插入数据出错，错误数据是:" + statement.toString());
+                SqliteLog.e("插入数据出错，错误数据是:" + statement.toString());
             }
             return count;
         });
     }
 
     @Override
-    public long statement(@NonNull String sql,
-                          @NonNull Function<SQLiteStatement<?>, Long> function) {
+    public long statement(String sql,
+                          Function<SQLiteStatement<?>, Long> function) {
         final SQLiteStatement<?> statement = compileStatement(sql);
         try {
             acquireReference();
@@ -220,7 +222,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
             }
             return statementSize;
         } catch (SQLException e) {
-            Log.e("database", "Error statement " + statement.toString(), e);
+            SqliteLog.e("Error statement " + statement.toString(), e);
             return -1;
         } finally {
             CloseUtils.closeQuietly(statement);
@@ -229,8 +231,8 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long transaction(@NonNull String sql,
-                            @NonNull Function<SQLiteStatement<?>, Long> function) {
+    public long transaction(String sql,
+                            Function<SQLiteStatement<?>, Long> function) {
         try {
             beginTransaction();
             final long transactionSize = statement(sql, function);
@@ -242,7 +244,7 @@ public abstract class SQLiteDatabase extends Transaction implements SQLite,
     }
 
     @Override
-    public long transaction(@NonNull Function<SQLiteDatabase, Long> function) {
+    public long transaction(Function<SQLiteDatabase, Long> function) {
         try {
             beginTransaction();
             final Long transactionSize = function.apply(this);

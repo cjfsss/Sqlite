@@ -1,6 +1,5 @@
 package hos.sqlite.datebase;
 
-import androidx.annotation.NonNull;
 
 /**
  * <p>Title: Database </p>
@@ -14,7 +13,6 @@ import androidx.annotation.NonNull;
 public interface Database extends DatabaseExecutor {
 
     /// The path of the database
-    @NonNull
     default String getPath() {
         return getConnection().getPath();
     }

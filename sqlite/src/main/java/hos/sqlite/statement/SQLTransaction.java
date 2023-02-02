@@ -1,8 +1,7 @@
 package hos.sqlite.statement;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
+
+import hos.sqlite.datebase.Function;
 
 import hos.sqlite.datebase.SqlBuilder;
 
@@ -18,9 +17,9 @@ import hos.sqlite.datebase.SqlBuilder;
  */
 public interface SQLTransaction {
 
-    default long statement(@NonNull final String sql,
-                                                                          @Nullable final Object[] whereArgs,
-                           @NonNull final Function<SQLiteStatement<?>, Long> function) {
+    default long statement(final String sql,
+                           final Object[] whereArgs,
+                           final Function<SQLiteStatement<?>, Long> function) {
         Function<SQLiteStatement<?>, Long> sqLiteStatementLongFunction = statement -> {
             new SqlBuilder().statement(statement, whereArgs);
             return function.apply(statement);
@@ -28,11 +27,11 @@ public interface SQLTransaction {
         return statement(sql, sqLiteStatementLongFunction);
     }
 
-    long statement(@NonNull final String sql,
-                   @NonNull final Function<SQLiteStatement<?>, Long> function);
+    long statement(final String sql,
+                   final Function<SQLiteStatement<?>, Long> function);
 
-    default long transaction(@NonNull final String sql, @Nullable final Object[] whereArgs,
-                             @NonNull final Function<SQLiteStatement<?>, Long> function) {
+    default long transaction(final String sql, final Object[] whereArgs,
+                             final Function<SQLiteStatement<?>, Long> function) {
         Function<SQLiteStatement<?>, Long> transaction = statement -> {
             new SqlBuilder().statement(statement, whereArgs);
             return function.apply(statement);
@@ -40,7 +39,7 @@ public interface SQLTransaction {
         return transaction(sql, transaction);
     }
 
-    long transaction(@NonNull final String sql, @NonNull final Function<SQLiteStatement<?>, Long> function);
+    long transaction(final String sql, final Function<SQLiteStatement<?>, Long> function);
 
-    long transaction(@NonNull final Function<SQLiteDatabase, Long> function);
+    long transaction(final Function<SQLiteDatabase, Long> function);
 }

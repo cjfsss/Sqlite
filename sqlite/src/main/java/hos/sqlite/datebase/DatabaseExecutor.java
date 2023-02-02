@@ -6,9 +6,6 @@ import android.database.SQLException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.arch.core.util.Function;
 
 import java.util.List;
 import java.util.Map;
@@ -31,19 +28,18 @@ import hos.utils.CloseUtils;
 public interface DatabaseExecutor extends SQLiteExecutor,
         SQLTransaction {
 
-    @NonNull
     SQLiteDatabase getConnection();
 
-    @NonNull
+    
     default String getLogTag() {
         return "database";
     }
 
-    boolean tableIsExist(@NonNull final String tableName);
+    boolean tableIsExist( final String tableName);
 
-    @Nullable
-    default String getCreateSqlForMaster(@NonNull final String tableName) {
-        @Nullable final List<Map<String, Object>> sqlCreateMap = rawQuery(
+    
+    default String getCreateSqlForMaster( final String tableName) {
+         final List<Map<String, Object>> sqlCreateMap = rawQuery(
                 "SELECT sql FROM sqlite_master WHERE name = ? ", new Object[]{tableName});
         if (sqlCreateMap == null || sqlCreateMap.isEmpty()) {
             return null;
@@ -57,9 +53,9 @@ public interface DatabaseExecutor extends SQLiteExecutor,
      * @param tableName 表名
      * @return 主键
      */
-    @Nullable
-    default String getPrimaryKey(@NonNull final String tableName) {
-        @Nullable final List<Map<String, Object>> mapList = rawQuery(" pragma table_info ( ? ) ",
+    
+    default String getPrimaryKey( final String tableName) {
+         final List<Map<String, Object>> mapList = rawQuery(" pragma table_info ( ? ) ",
                 new Object[]{tableName});
         if (mapList == null || mapList.isEmpty()) {
             return null;
@@ -76,9 +72,9 @@ public interface DatabaseExecutor extends SQLiteExecutor,
     /**
      * 获取当前数据库所有表名
      */
-    @Nullable
+    
     default String[] getDBTables() {
-        @NonNull final StringBuilder stringBuffer = new StringBuilder();
+         final StringBuilder stringBuffer = new StringBuilder();
         Cursor cursor = null;
         try {
             cursor = rawQueryCursor("SELECT name FROM sqlite_master WHERE type=? ORDER BY name", new Object[]{"table"});
@@ -101,13 +97,13 @@ public interface DatabaseExecutor extends SQLiteExecutor,
      * 删除所有的表
      */
     default boolean dropAllTables() {
-        @Nullable final String[] tables = getDBTables();
+         final String[] tables = getDBTables();
         if (tables == null || tables.length == 0) {
             return false;
         }
         final int tableSize = tables.length;
-        @NonNull final SQLiteDatabase sqLiteDatabase = getConnection();
-        @NonNull final String sql = "DROP TABLE IF EXISTS [?]";
+         final SQLiteDatabase sqLiteDatabase = getConnection();
+         final String sql = "DROP TABLE IF EXISTS [?]";
         return tableSize == sqLiteDatabase.transaction(sql, statement -> {
             /* 删除数据库中所有的表 */
             long count = 0;
@@ -128,112 +124,112 @@ public interface DatabaseExecutor extends SQLiteExecutor,
         });
     }
 
-    @Nullable
-    default Map<String, Object> queryFirstByPrimaryKey(@NonNull final String table, @NonNull final String primaryKey,
-                                                       @NonNull final Object primaryKeyValue) {
+    
+    default Map<String, Object> queryFirstByPrimaryKey( final String table,  final String primaryKey,
+                                                        final Object primaryKeyValue) {
         return queryFirst(table, primaryKey + " =?", new String[]{String.valueOf(primaryKeyValue)});
     }
 
     @Override
-    default boolean execSQL(@NonNull final String sql) {
+    default boolean execSQL( final String sql) {
         return getConnection().execSQL(sql);
     }
 
     @Override
-    default boolean execSQL(@NonNull final String sql, @NonNull final Object[] bindArgs) {
+    default boolean execSQL( final String sql,  final Object[] bindArgs) {
         return getConnection().execSQL(sql, bindArgs);
     }
 
-    @Nullable
+    
     @Override
-    default Cursor rawQueryCursor(@NonNull String sql, @Nullable Object[] selectionArgs) {
+    default Cursor rawQueryCursor( String sql,  Object[] selectionArgs) {
         return getConnection().rawQueryCursor(sql, selectionArgs);
     }
 
     @Override
-    default int update(@NonNull String table, @NonNull ContentValues values, @NonNull String whereClause,
-                       @Nullable final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    default int update( String table,  ContentValues values,  String whereClause,
+                        final Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().update(table, values, whereClause, whereArgs, conflictAlgorithm);
     }
 
     @Override
-    default long update(@NonNull String table, @NonNull Map<String, Object> values, @NonNull String whereClause,
-                        @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    default long update( String table,  Map<String, Object> values,  String whereClause,
+                         Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().update(table, values, whereClause, whereArgs, conflictAlgorithm);
     }
 
     @Override
-    default long transactionUpdate(@NonNull String table, @NonNull List<Map<String, Object>> valueList, @NonNull String whereClause,
-                                   @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    default long transactionUpdate( String table,  List<Map<String, Object>> valueList,  String whereClause,
+                                    Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().transactionUpdate(table, valueList, whereClause, whereArgs, conflictAlgorithm);
     }
 
 
     @Override
-    default long transactionUpdateValue(@NonNull String table, @NonNull List<ContentValues> valueList, @NonNull String whereClause, @Nullable Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
+    default long transactionUpdateValue( String table,  List<ContentValues> valueList,  String whereClause,  Object[] whereArgs, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().transactionUpdateValue(table, valueList, whereClause, whereArgs, conflictAlgorithm);
     }
 
 
     @Override
-    default long rawUpdate(@NonNull String sql, @Nullable Object[] whereArgs) {
+    default long rawUpdate( String sql,  Object[] whereArgs) {
         return getConnection().rawUpdate(sql, whereArgs);
     }
 
     @Override
-    default int delete(@NonNull String table, @Nullable String whereClause, @Nullable final Object[] whereArgs) {
+    default int delete( String table,  String whereClause,  final Object[] whereArgs) {
         return getConnection().delete(table, whereClause, whereArgs);
     }
 
     @Override
-    default long rawDelete(@NonNull String sql, @Nullable Object[] whereArgs) {
+    default long rawDelete( String sql,  Object[] whereArgs) {
         return getConnection().rawDelete(sql, whereArgs);
     }
 
     @Override
-    default long insert(@NonNull String table, @Nullable final String nullColumnHack, @NonNull ContentValues values,
+    default long insert( String table,  final String nullColumnHack,  ContentValues values,
                         ConflictAlgorithm conflictAlgorithm) {
         return getConnection().insert(table, nullColumnHack, values, conflictAlgorithm);
     }
 
 
     @Override
-    default long insert(@NonNull String table, @Nullable String nullColumnHack, @NonNull Map<String, Object> values,
+    default long insert( String table,  String nullColumnHack,  Map<String, Object> values,
                         ConflictAlgorithm conflictAlgorithm) {
         return getConnection().insert(table, nullColumnHack, values, conflictAlgorithm);
     }
 
     @Override
-    default long transactionInsert(@NonNull String table, @Nullable String nullColumnHack,
-                                   @NonNull List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
+    default long transactionInsert( String table,  String nullColumnHack,
+                                    List<Map<String, Object>> valueList, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().transactionInsert(table, nullColumnHack, valueList, conflictAlgorithm);
     }
 
 
     @Override
-    default long transactionInsertValue(@NonNull String table, @Nullable String nullColumnHack, @NonNull List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
+    default long transactionInsertValue( String table,  String nullColumnHack,  List<ContentValues> valueList, ConflictAlgorithm conflictAlgorithm) {
         return getConnection().transactionInsertValue(table, nullColumnHack, valueList, conflictAlgorithm);
     }
 
     @Override
-    default long rawInsert(@NonNull String sql, @Nullable Object[] whereArgs) {
+    default long rawInsert( String sql,  Object[] whereArgs) {
         return getConnection().rawInsert(sql, whereArgs);
     }
 
     @Override
-    default long statement(@NonNull final String sql,
-                           @NonNull final Function<SQLiteStatement<?>, Long> function) {
+    default long statement( final String sql,
+                            final Function<SQLiteStatement<?>, Long> function) {
         return getConnection().statement(sql, function);
     }
 
     @Override
-    default long transaction(@NonNull final String sql,
-                             @NonNull final Function<SQLiteStatement<?>, Long> function) {
+    default long transaction( final String sql,
+                              final Function<SQLiteStatement<?>, Long> function) {
         return getConnection().transaction(sql, function);
     }
 
     @Override
-    default long transaction(@NonNull Function<SQLiteDatabase, Long> function) {
+    default long transaction( Function<SQLiteDatabase, Long> function) {
         return getConnection().transaction(function);
     }
 
@@ -242,8 +238,8 @@ public interface DatabaseExecutor extends SQLiteExecutor,
      *
      * @param tableNameArrays 要删除的表
      */
-    default boolean deleteArrays(@NonNull final String[] tableNameArrays) {
-        @NonNull final SQLiteDatabase sqLiteDatabase = getConnection();
+    default boolean deleteArrays( final String[] tableNameArrays) {
+         final SQLiteDatabase sqLiteDatabase = getConnection();
         return 0 < sqLiteDatabase.transaction(new Function<SQLiteDatabase, Long>() {
             @Override
             public Long apply(SQLiteDatabase database) {
@@ -262,15 +258,15 @@ public interface DatabaseExecutor extends SQLiteExecutor,
         });
     }
 
-    default boolean deleteByPrimaryKey(@NonNull final String tableName, @NonNull final String primaryKey,
-                                       @NonNull final Object[] whereIn) {
+    default boolean deleteByPrimaryKey( final String tableName,  final String primaryKey,
+                                        final Object[] whereIn) {
         /* 获取主键的名称和对应的值 */
         final SqlBuilder sqlBuilder = new SqlBuilder().whereIn(tableName, primaryKey, whereIn);
         return execSQL(sqlBuilder.sql);
     }
 
-    default long deleteByPrimaryKey(@NonNull final String tableName, @NonNull final String primaryKey,
-                                    @Nullable final Object value) {
+    default long deleteByPrimaryKey( final String tableName,  final String primaryKey,
+                                     final Object value) {
         return delete(tableName, primaryKey + " = ? ", new String[]{String.valueOf(value)});
     }
 
@@ -278,7 +274,7 @@ public interface DatabaseExecutor extends SQLiteExecutor,
      * 删除所有的表数据
      */
     default boolean deleteAllTables() {
-        @Nullable final String[] tables = getDBTables();
+         final String[] tables = getDBTables();
         if (tables == null || tables.length == 0) {
             return false;
         }
